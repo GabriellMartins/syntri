@@ -13,20 +13,19 @@ jobs:
       - name: 📥 Baixar o código do repositório
         uses: actions/checkout@v3
 
-      - name: Instalar Java 17
+      - name: ☕ Instalar Java 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-
-      - name: Dar permissão ao Gradle
+      - name: 🧹 Dar permissão ao Gradle
         run: chmod +x ./gradlew
 
       - name: 🛠️ Compilar o projeto
         run: ./gradlew build
 
-      - name: Criar Release no GitHub com o JAR
+      - name: 🚀 Criar Release no GitHub com o JAR
         uses: softprops/action-gh-release@v1
         with:
           files: build/libs/*.jar

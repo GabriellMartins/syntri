@@ -11,8 +11,9 @@ group = "com.br.gabrielmartins"
 version = "1.0.0"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
+
 
 tasks.compileJava {
     options.release.set(8)
