@@ -1,0 +1,30 @@
+chat:
+  actionbar_off: Chat disabled
+  actionbar_on: Chat enabled
+  activated: CHAT ENABLED
+  cleared_by: Chat was cleared by
+  deactivated: CHAT DISABLED
+  disabled_by: Global chat has been §cdisabled§f by
+  enabled_by: Global chat has been §aenabled§f by
+  invalid_command: 'Invalid command. Use: §7/chat <on|off|clear>'
+  no_permission: §cYou don't have permission to use this command.
+  title: SYNTRI CHAT
+  usage_clear: 'Use: §b/chat clear §7→ Clear'
+  usage_off: 'Use: §c/chat off §7→ Disable'
+  usage_on: 'Use: §a/chat on §7→ Enable'
+commands:
+  gamemode:
+    creative: §aYou switched to Creative mode.
+    invalid_mode: §cInvalid mode. Use 1 (Creative), 2 (Survival), or 3 (Spectator).
+    invalid_number: §cPlease provide a valid number for the game mode.
+    no_permission: §cYou don't have permission to use this command.
+    only_players: §cOnly players can use this command.
+    provide_mode: §cPlease provide a game mode (1, 2, or 3).
+    spectator: §aYou switched to Spectator mode.
+    survival: §aYou switched to Survival mode.
+general:
+  quit-message:
+    text: '&e[Syntri] Player %player_name% left the server.'
+  welcome-message:
+    text: '&aName: %syntri_name% | Health: %syntri_health% | World: %syntri_world%
+      | Ping: %syntri_ping% | Online: %syntri_online% | Backend: %syntri_backend%'

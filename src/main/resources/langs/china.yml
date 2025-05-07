@@ -1,0 +1,30 @@
+chat:
+  actionbar_off: 聊天已禁用
+  actionbar_on: 聊天已启用
+  activated: 聊天已启用
+  cleared_by: 聊天已被清除，操作者为
+  deactivated: 聊天已禁用
+  disabled_by: 全局聊天已被 §c禁用§f，操作者为
+  enabled_by: 全局聊天已被 §a启用§f，操作者为
+  invalid_command: '无效的命令。用法: §7/chat <on|off|clear>'
+  no_permission: §c你没有权限使用此命令。
+  title: SYNTRI 聊天
+  usage_clear: '用法: §b/chat clear §7→ 清除'
+  usage_off: '用法: §c/chat off §7→ 禁用'
+  usage_on: '用法: §a/chat on §7→ 启用'
+commands:
+  gamemode:
+    creative: §a您已切换到创意模式。
+    invalid_mode: §c无效模式。请使用 1（创意）、2（生存）或 3（旁观者）。
+    invalid_number: §c请输入有效的游戏模式编号。
+    no_permission: §c你没有权限使用此命令。
+    only_players: §c只有玩家可以使用此命令。
+    provide_mode: §c请输入游戏模式（1、2 或 3）。
+    spectator: §a您已切换到旁观者模式。
+    survival: §a您已切换到生存模式。
+general:
+  quit-message:
+    text: '&e[Syntri] 玩家 %player_name% 已退出服务器。'
+  welcome-message:
+    text: '&a姓名: %syntri_name% | 生命值: %syntri_health% | 世界: %syntri_world% | 延迟: %syntri_ping%
+      | 在线: %syntri_online% | 数据库: %syntri_backend%'

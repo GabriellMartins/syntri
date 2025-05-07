@@ -1,0 +1,31 @@
+chat:
+  actionbar_off: Csevegés letiltva
+  actionbar_on: Csevegés engedélyezve
+  activated: CSEVEGÉS ENGEDÉLYEZVE
+  cleared_by: 'A csevegést törölte:'
+  deactivated: CSEVEGÉS LETILTVA
+  disabled_by: 'A globális csevegést §cletiltotta§f:'
+  enabled_by: 'A globális csevegést §aengedélyezte§f:'
+  invalid_command: 'Érvénytelen parancs. Használat: §7/chat <on|off|clear>'
+  no_permission: §cNincs jogosultságod a parancs használatához.
+  title: SYNTRI CSEVEGÉS
+  usage_clear: 'Használat: §b/chat clear §7→ Törlés'
+  usage_off: 'Használat: §c/chat off §7→ Letiltás'
+  usage_on: 'Használat: §a/chat on §7→ Engedélyezés'
+commands:
+  gamemode:
+    creative: §aÁtváltottál kreatív módba.
+    invalid_mode: §cÉrvénytelen mód. Használd a 1 (Kreatív), 2 (Túlélő) vagy 3 (Néző)
+      módot.
+    invalid_number: §cKérlek, adj meg egy érvényes számot a játékmódhoz.
+    no_permission: §cNincs jogosultságod ehhez a parancshoz.
+    only_players: §cCsak játékosok használhatják ezt a parancsot.
+    provide_mode: §cKérlek, adj meg egy játék módot (1, 2 vagy 3).
+    spectator: §aÁtváltottál néző módba.
+    survival: §aÁtváltottál túlélő módba.
+general:
+  quit-message:
+    text: '&e[Syntri] A játékos %player_name% elhagyta a szervert.'
+  welcome-message:
+    text: '&aNév: %syntri_name% | Élet: %syntri_health% | Világ: %syntri_world% |
+      Ping: %syntri_ping% | Online: %syntri_online% | Adatbázis: %syntri_backend%'

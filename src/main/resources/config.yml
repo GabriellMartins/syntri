@@ -1,0 +1,107 @@
+# ─────────────────────────────────────────────────────────────────────
+# ⚙️ Configuração do Banco de Dados
+# ─────────────────────────────────────────────────────────────────────
+
+backend:
+  type: "mysql"
+  host: "198.89.99.179"
+  port: 3306
+  database: "s20_fuzy_shaw"
+  username: "u20_LoZOofh8zE"
+  password: "Ck.DmYnEvjtKo^+L!9oj.RGT"
+  file: "database.db"
+  uri: "mongodb://localhost"
+  service: "XE"
+
+# ─────────────────────────────────────────────────────────────────────
+# 🔧 Configuração Geral do Servidor
+# ─────────────────────────────────────────────────────────────────────
+
+general:
+  language: "us"
+
+  welcome-message:
+    enabled: true
+    text: "&aNome: %syntri_name% | Vida: %syntri_health% | Mundo: %syntri_world% | Ping: %syntri_ping% | Online: %syntri_online% | Banco: %syntri_backend%"
+
+  quit-message:
+    enabled: true
+    text: "&e[Syntri] O jogador %player_name% saiu do servidor."
+
+# 📌 Tipos para eventos não-canceláveis
+
+item-break:
+  # Define o comportamento ao quebrar um item:
+  # alert  → envia uma mensagem ao jogador
+  # log    → registra no console
+  # ignore → não faz nada
+  type: "alert"
+
+respawn:
+  # Define onde o jogador renasce após morrer:
+  # default → comportamento padrão (cama, âncora, etc.)
+  # spawn   → força o renascimento no spawn do mundo
+  type: "default"
+
+
+# ⚙️ Comportamentos de eventos canceláveis
+prevent-damage: false              # Impede qualquer tipo de dano ao jogador (PvP, queda, fogo, etc.)
+prevent-hunger: false              # Impede que a barra de fome diminua
+prevent-block-break: true          # Impede jogadores de quebrarem blocos
+prevent-block-place: false         # Impede jogadores de colocarem blocos
+prevent-interact: false            # Impede interações com blocos (alavancas, portas, baús, etc.)
+prevent-item-drop: false           # Impede que jogadores joguem itens no chão
+prevent-item-pickup: false         # Impede que jogadores peguem itens do chão
+prevent-weather-change: false      # Impede mudanças climáticas no mundo (ex: chuva, trovão)
+prevent-gamemode-change: false     # Impede mudança de modo de jogo (Survival, Creative...)
+prevent-command: false             # Impede o uso de comandos por jogadores
+prevent-inventory-click: false     # Impede cliques dentro de qualquer inventário
+prevent-inventory-open: false      # Impede abertura de qualquer tipo de inventário
+prevent-inventory-drag: false      # Impede arrastar itens no inventário
+prevent-entity-interact: false     # Impede interação com entidades (ex: aldeões, molduras, cavalos)
+prevent-shear: false               # Impede o uso de tesouras em entidades (ex: tosar ovelhas)
+prevent-item-swap: false           # Impede troca de itens na hotbar com scroll do mouse
+prevent-bucket-fill: false         # Impede o uso de baldes para pegar líquidos (água, lava)
+prevent-bucket-empty: false        # Impede o uso de baldes para despejar líquidos
+prevent-ignite: false              # Impede incendiar blocos (ex: com isqueiro)
+prevent-explosions: false          # Impede explosões causadas por entidades ou blocos (ex: Creeper, TNT)
+prevent-portal: false              # Impede o uso de portais (Nether, End)
+prevent-teleport: false            # Impede qualquer tipo de teleporte
+prevent-enchant: false             # Impede encantamentos em itens
+prevent-bed: false                 # Impede jogadores de deitarem em camas
+prevent-vehicle-enter: false       # Impede entrada em veículos (barcos, minecarts)
+prevent-vehicle-exit: false        # Impede saída de veículos
+prevent-consume: false             # Impede consumo de comida, poções, leite etc.
+prevent-hanging-place: false       # Impede colocação de itens pendurados (quadros, molduras)
+prevent-hanging-break: false       # Impede quebra de itens pendurados
+prevent-world-unload: false        # Impede o descarregamento (unload) de mundos do servidor
+
+
+# ─────────────────────────────────────────────────────────────────────
+# 🔧 Configuração do MOTD (Message of the Day)
+# ─────────────────────────────────────────────────────────────────────
+
+motd:
+  enabled: true
+  messages:
+    - "&eBem-vindodasdasda"
+    - "&aConfira nossos eventos!"
+    - "&bDivirta-se jogando!"
+  interval: 1
+  animation: true
+
+# ─────────────────────────────────────────────────────────────────────
+# 📊 Configuração da Scoreboard
+# ─────────────────────────────────────────────────────────────────────
+
+scoreboard:
+  enabled: true
+  title: "&e&lSYNTRI"
+  lines:
+    - "&7&m----------------------"
+    - "&aNick: &f%player_name%"
+    - "&aVida: &f%syntri_health%"
+    - "&aPing: &f%syntri_ping%ms"
+    - "&aOnline: &f%syntri_online%"
+    - "&aBanco: &f%syntri_backend%"
+    - "&7&m----------------------"
