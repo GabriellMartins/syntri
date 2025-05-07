@@ -12,14 +12,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class ScoreboardListener implements Listener {
 
-    private final SyntriPlugin plugin;
     private final ScoreboardManager scoreboard;
 
-    public ScoreboardListener(SyntriPlugin plugin) {
-        this.plugin = plugin;
-        this.scoreboard = new ScoreboardManager(plugin.getConfig());
+    public ScoreboardListener() {
+        this.scoreboard = new ScoreboardManager(SyntriPlugin.getInstance().getConfig());
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, SyntriPlugin.getInstance());
         startAutoUpdate();
     }
 
@@ -44,10 +42,10 @@ public class ScoreboardListener implements Listener {
                     scoreboard.apply(player);
                 }
             }
-        }.runTaskTimer(plugin, 20L, 40L);
+        }.runTaskTimer(SyntriPlugin.getInstance(), 20L, 40L);
     }
 
     private boolean isScoreboardEnabled() {
-        return plugin.getConfig().getBoolean("scoreboard.enabled", true);
+        return SyntriPlugin.getInstance().getConfig().getBoolean("scoreboard.enabled", true);
     }
 }

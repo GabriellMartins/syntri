@@ -1,6 +1,7 @@
 package com.br.gabrielmartins.syntri.loader.listener;
 
 import com.br.gabrielmartins.syntri.SyntriPlugin;
+import com.br.gabrielmartins.syntri.api.inventory.loader.InventoryLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.reflections.Reflections;
@@ -13,7 +14,6 @@ public class LoaderListener {
 
     public LoaderListener listener(String basePackage) {
         SyntriPlugin plugin = SyntriPlugin.getInstance();
-
         plugin.getLogger().info("Escaneando pacote: " + basePackage);
 
         Reflections reflections = new Reflections(basePackage);
@@ -21,35 +21,35 @@ public class LoaderListener {
 
         if (listenerClasses.isEmpty()) {
             plugin.getLogger().warning("Nenhum Listener encontrado no pacote: " + basePackage);
+            return this;
         }
 
         for (Class<? extends Listener> clazz : listenerClasses) {
             if (Modifier.isAbstract(clazz.getModifiers())) continue;
 
             try {
-                Listener listener;
+                Listener listenerInstance = null;
+                Constructor<?>[] constructors = clazz.getDeclaredConstructors();
 
-                Constructor<?> constructorWithPlugin = null;
+                for (Constructor<?> constructor : constructors) {
+                    if (constructor.getParameterCount() == 1 &&
+                            constructor.getParameterTypes()[0] == InventoryLoader.class) {
 
-                for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
-                    Class<?>[] parameters = constructor.getParameterTypes();
-                    if (parameters.length == 1 && parameters[0] == SyntriPlugin.class) {
-                        constructorWithPlugin = constructor;
+                        listenerInstance = (Listener) constructor.newInstance(plugin.getInventoryLoader());
                         break;
                     }
                 }
 
-                if (constructorWithPlugin != null) {
-                    listener = (Listener) constructorWithPlugin.newInstance(plugin);
-                } else {
-                    listener = clazz.getDeclaredConstructor().newInstance();
+                if (listenerInstance == null) {
+                    Constructor<? extends Listener> noArgsConstructor = clazz.getDeclaredConstructor();
+                    listenerInstance = noArgsConstructor.newInstance();
                 }
 
-                Bukkit.getPluginManager().registerEvents(listener, plugin);
-                plugin.getLogger().info("Listener registrado: " + clazz.getSimpleName());
+                Bukkit.getPluginManager().registerEvents(listenerInstance, plugin);
+                plugin.getLogger().info("Listener carregado: " + clazz.getSimpleName());
 
             } catch (Exception e) {
-                plugin.getLogger().warning("Erro ao registrar listener: " + clazz.getName());
+                plugin.getLogger().warning("Erro ao carregar listener: " + clazz.getName());
                 e.printStackTrace();
             }
         }

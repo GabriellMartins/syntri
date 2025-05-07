@@ -1,5 +1,6 @@
 package com.br.gabrielmartins.syntri;
 
+import com.br.gabrielmartins.syntri.api.inventory.loader.InventoryLoader;
 import com.br.gabrielmartins.syntri.api.translate.Translate;
 import com.br.gabrielmartins.syntri.backend.*;
 import com.br.gabrielmartins.syntri.backend.firebird.FirebirdBackend;
@@ -12,7 +13,11 @@ import com.br.gabrielmartins.syntri.backend.sqllite.SQLiteBackend;
 import com.br.gabrielmartins.syntri.backend.sqlserver.SQLServerBackend;
 import com.br.gabrielmartins.syntri.data.controller.DataHandler;
 
+
 import com.br.gabrielmartins.syntri.kit.manager.KitManager;
+import com.br.gabrielmartins.syntri.listener.general.GeneralListener;
+import com.br.gabrielmartins.syntri.listener.manager.ListenerRegistry;
+import com.br.gabrielmartins.syntri.listener.scoreboard.ScoreboardListener;
 import com.br.gabrielmartins.syntri.listener.server.ConfigListener;
 import com.br.gabrielmartins.syntri.loader.command.CommandLoader;
 import com.br.gabrielmartins.syntri.loader.listener.LoaderListener;
@@ -26,6 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 
@@ -34,12 +40,14 @@ public final class SyntriPlugin extends JavaPlugin {
 
     @Getter private static SyntriPlugin instance;
     @Getter private Backend backend;
-    @Getter private final LoaderListener loader = new LoaderListener();
+    @Getter private final LoaderListener listenerload = new LoaderListener();
     @Getter private FileConfiguration config;
+    @Getter private static InventoryLoader inventoryLoader = new InventoryLoader();
 
     @Override
     public void onLoad() {
         instance = this;
+
 
         getLogger().setFilter(new Filter() {
             @Override
@@ -51,6 +59,8 @@ public final class SyntriPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
+        InventoryLoader loader = new InventoryLoader();
 
         File kitFile = new File(getDataFolder(), "kits.yml");
         if (!kitFile.exists()) {
@@ -64,12 +74,18 @@ public final class SyntriPlugin extends JavaPlugin {
         }
         loadConfigWithUTF8(configFile);
 
+
+        this.inventoryLoader = loader;
+
+        ListenerRegistry.autoRegister(GeneralListener.class);
+
         initBackend();
         DataHandler.createTables();
 
+        new ScoreboardListener();
         new ConfigListener();
         new CommandLoader(this).load("com.br.gabrielmartins.syntri.commands");
-        loader.listener("com.br.gabrielmartins.syntri.listener");
+        listenerload.listener("com.br.gabrielmartins.syntri.listener");
 
         String language = getConfig().getString("general.language", "br");
         Translate.setLanguage(language);
@@ -89,12 +105,13 @@ public final class SyntriPlugin extends JavaPlugin {
         getLogger().info("§aSyntri iniciado com sucesso!");
     }
 
-
     @Override
     public void onDisable() {
         if (backend != null && backend.isConnected()) {
             backend.disconnect();
         }
+
+
         getLogger().info("§cSyntri finalizado com sucesso.");
     }
 

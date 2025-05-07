@@ -11,7 +11,7 @@ group = "com.br.gabrielmartins"
 version = "1.0.0"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 tasks.compileJava {
@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-    compileOnly(files("C:\\Users\\GabrielMartins\\IdeaProjects\\Syntri\\libs\\place.jar"))
+    compileOnly(files("libs/place.jar"))
     compileOnly("org.jetbrains:annotations:24.0.1")
 
     implementation("org.json:json:20210307")
@@ -54,7 +54,6 @@ bukkit {
     main = "com.br.gabrielmartins.syntri.SyntriPlugin"
     authors = listOf("shaw")
     description = "Plugin modular com suporte a múltiplos bancos e integração PlaceholderAPI"
-    apiVersion = "1.13"
     softDepend = listOf("PlaceholderAPI")
 }
 

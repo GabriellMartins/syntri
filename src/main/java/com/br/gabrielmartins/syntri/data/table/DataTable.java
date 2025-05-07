@@ -9,7 +9,8 @@ import java.sql.*;
 public enum DataTable {
 
     SPAWN("spawn", "CREATE TABLE IF NOT EXISTS spawn (" + "id INT PRIMARY KEY, world VARCHAR(255), x DOUBLE, y DOUBLE, z DOUBLE);", "INSERT INTO spawn (id, world, x, y, z) VALUES (1, ?, ?, ?, ?) " + "ON DUPLICATE KEY UPDATE world = ?, x = ?, y = ?, z = ?"),
-    HOME("homes", "CREATE TABLE IF NOT EXISTS homes (" + "uuid VARCHAR(36) NOT NULL, " + "home_name VARCHAR(255) NOT NULL, " + "world VARCHAR(255) NOT NULL, " + "x DOUBLE NOT NULL, " + "y DOUBLE NOT NULL, " + "z DOUBLE NOT NULL, " + "PRIMARY KEY (uuid, home_name));", "INSERT INTO homes (uuid, home_name, world, x, y, z) VALUES (?, ?, ?, ?, ?, ?)" + "ON DUPLICATE KEY UPDATE x = ?, y = ?, z = ?", "SELECT home_name FROM homes WHERE uuid = ?", "SELECT world, x, y, z FROM homes WHERE uuid = ? AND home_name = ?");
+    HOME("homes", "CREATE TABLE IF NOT EXISTS homes (" + "uuid VARCHAR(36) NOT NULL, " + "home_name VARCHAR(255) NOT NULL, " + "world VARCHAR(255) NOT NULL, " + "x DOUBLE NOT NULL, " + "y DOUBLE NOT NULL, " + "z DOUBLE NOT NULL, " + "PRIMARY KEY (uuid, home_name));", "INSERT INTO homes (uuid, home_name, world, x, y, z) VALUES (?, ?, ?, ?, ?, ?)" + "ON DUPLICATE KEY UPDATE x = ?, y = ?, z = ?", "SELECT home_name FROM homes WHERE uuid = ?", "SELECT world, x, y, z FROM homes WHERE uuid = ? AND home_name = ?"),
+    WARP("warps", "CREATE TABLE IF NOT EXISTS warps (" + "uuid VARCHAR(36) NOT NULL, " + "warp_name VARCHAR(255) NOT NULL, " + "world VARCHAR(255) NOT NULL, " + "x DOUBLE NOT NULL, " + "y DOUBLE NOT NULL, " + "z DOUBLE NOT NULL, " + "PRIMARY KEY (uuid, warp_name));", "INSERT INTO warps (uuid, warp_name, world, x, y, z) VALUES (?, ?, ?, ?, ?, ?)" + "ON DUPLICATE KEY UPDATE x = ?, y = ?, z = ?", "SELECT warp_name FROM warps WHERE uuid = ?", "SELECT world, x, y, z FROM warps WHERE uuid = ? AND warp_name = ?");
 
     private final String tableName;
     private final String createTableSQL;
@@ -133,6 +134,88 @@ public enum DataTable {
 
             stmt.executeUpdate();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void saveWarp(Player player, String warpName) {
+        String uuid = player.getUniqueId().toString();
+        String world = player.getWorld().getName();
+        double x = player.getLocation().getX();
+        double y = player.getLocation().getY();
+        double z = player.getLocation().getZ();
+
+        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(insertSQL)) {
+
+            stmt.setString(1, uuid);
+            stmt.setString(2, warpName);
+            stmt.setString(3, world);
+            stmt.setDouble(4, x);
+            stmt.setDouble(5, y);
+            stmt.setDouble(6, z);
+            stmt.setDouble(7, x);
+            stmt.setDouble(8, y);
+            stmt.setDouble(9, z);
+
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ResultSet listWarp(Player player) {
+        String uuid = player.getUniqueId().toString();
+        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(listSQL)) {
+
+            stmt.setString(1, uuid);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                player.sendMessage(Translate.get("§a§lSuas casas:"));
+                do {
+                    String warpName = rs.getString("warp_name");
+                    player.sendMessage(Translate.get("§e - " + warpName));
+                } while (rs.next());
+            } else {
+                player.sendMessage("§cVocê não tem casas salvas.");
+            }
+
+            return rs;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void teleportToWarp(Player player, String warpName) {
+        String uuid = player.getUniqueId().toString();
+        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(selectSQL)) {
+
+            stmt.setString(1, uuid);
+            stmt.setString(2, warpName);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs != null && rs.next()) {
+                String worldName = rs.getString("world");
+                double x = rs.getDouble("x");
+                double y = rs.getDouble("y");
+                double z = rs.getDouble("z");
+
+                if (player.getServer().getWorld(worldName) != null) {
+                    player.teleport(player.getServer().getWorld(worldName).getBlockAt((int) x, (int) y, (int) z).getLocation());
+                    player.sendMessage("§aVocê foi teleportado para a casa " + warpName + ".");
+                } else {
+                    player.sendMessage("§cO mundo da casa não foi encontrado.");
+                }
+            } else {
+                player.sendMessage("§cVocê não tem uma casa salva com o nome: " + warpName);
+            }
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
