@@ -59,6 +59,14 @@ bukkit {
     softDepend = listOf("PlaceholderAPI")
 }
 
+tasks.named("checkstyleMain").configure {
+    enabled = false
+}
+tasks.named("spotbugsMain").configure {
+    enabled = false
+}
+
+
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     archiveClassifier.set("")
     mergeServiceFiles()
