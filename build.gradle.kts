@@ -11,7 +11,8 @@ group = "com.br.gabrielmartins"
 version = "1.0.0"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 
