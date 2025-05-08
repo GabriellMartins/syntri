@@ -9,11 +9,20 @@ jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # ⬅️ NECESSÁRIO para criar releases
+      contents: write
 
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
+
+      - name: Configurar Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17' # ou sua versão
+          distribution: 'temurin'
+
+      - name: Buildar Plugin
+        run: ./gradlew build
 
       - name: Criar Release no GitHub
         uses: softprops/action-gh-release@v1
@@ -22,6 +31,6 @@ jobs:
           name: Release ${{ github.ref_name }}
           body: |
             Essa é a release para a versão `${{ github.ref_name }}`.
-            - Adicione notas detalhadas aqui se quiser.
+          files: build/libs/*.jar # ⬅️ envia todos os .jar gerados
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
