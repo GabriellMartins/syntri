@@ -8,6 +8,9 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # ⬅️ NECESSÁRIO para criar releases
+
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
