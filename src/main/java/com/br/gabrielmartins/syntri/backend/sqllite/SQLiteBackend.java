@@ -4,6 +4,7 @@ import com.br.gabrielmartins.syntri.backend.Backend;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -11,7 +12,7 @@ public class SQLiteBackend implements Backend {
 
     private final HikariDataSource dataSource;
 
-    public SQLiteBackend(String databaseFileName) {
+    public SQLiteBackend(File databaseFileName) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:sqlite:" + databaseFileName);
         config.setDriverClassName("org.sqlite.JDBC");

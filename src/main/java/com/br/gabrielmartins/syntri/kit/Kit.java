@@ -37,4 +37,8 @@ public class Kit {
     public long getCooldownMillis() {
         return cooldownMillis;
     }
+
+    public ItemStack[] getItems() {
+        return contents.toArray(new ItemStack[0]);
+    }
 }

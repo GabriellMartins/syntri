@@ -1,16 +1,13 @@
 package com.br.gabrielmartins.syntri.backend.mongo;
 
-import com.br.gabrielmartins.syntri.backend.Backend;
+import com.br.gabrielmartins.syntri.backend.DocumentBackend;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-public class MongoBackend implements Backend {
+public class MongoBackend implements DocumentBackend {
 
     private final String uri;
     private final String databaseName;
@@ -47,10 +44,6 @@ public class MongoBackend implements Backend {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        throw new UnsupportedOperationException("MongoDB não usa JDBC.");
-    }
-
     public MongoDatabase getDatabase() {
         return database;
     }

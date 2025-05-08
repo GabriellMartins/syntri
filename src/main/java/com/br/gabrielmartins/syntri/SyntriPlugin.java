@@ -3,6 +3,7 @@ package com.br.gabrielmartins.syntri;
 import com.br.gabrielmartins.syntri.api.inventory.loader.InventoryLoader;
 import com.br.gabrielmartins.syntri.api.translate.Translate;
 import com.br.gabrielmartins.syntri.backend.*;
+import com.br.gabrielmartins.syntri.backend.BackendFactory;
 import com.br.gabrielmartins.syntri.backend.firebird.FirebirdBackend;
 import com.br.gabrielmartins.syntri.backend.hikari.Hikari;
 import com.br.gabrielmartins.syntri.backend.mariadb.MariaDBBackend;
@@ -14,6 +15,8 @@ import com.br.gabrielmartins.syntri.backend.sqlserver.SQLServerBackend;
 import com.br.gabrielmartins.syntri.data.controller.DataHandler;
 
 
+import com.br.gabrielmartins.syntri.data.service.mongo.MongoDataService;
+import com.br.gabrielmartins.syntri.data.service.sql.SQLDataService;
 import com.br.gabrielmartins.syntri.kit.manager.KitManager;
 import com.br.gabrielmartins.syntri.listener.general.GeneralListener;
 import com.br.gabrielmartins.syntri.listener.manager.ListenerRegistry;
@@ -40,6 +43,7 @@ public final class SyntriPlugin extends JavaPlugin {
 
     @Getter private static SyntriPlugin instance;
     @Getter private Backend backend;
+    @Getter private MongoBackend mongoBackend;
     @Getter private final LoaderListener listenerload = new LoaderListener();
     @Getter private FileConfiguration config;
     @Getter private static InventoryLoader inventoryLoader = new InventoryLoader();
@@ -129,7 +133,6 @@ public final class SyntriPlugin extends JavaPlugin {
         }
     }
 
-
     private void initBackend() {
         ConfigurationSection cfg = getConfig().getConfigurationSection("backend");
         if (cfg == null) {
@@ -137,41 +140,36 @@ public final class SyntriPlugin extends JavaPlugin {
             return;
         }
 
-        BackendType type = BackendType.fromString(cfg.getString("type", "sqlite"));
+        BackendType type = BackendType.fromString(cfg.getString("type"));
         if (type == null) {
-            getLogger().severe("§cTipo de backend inválido!");
+            getLogger().severe("§cTipo de backend inválido no config.yml.");
             return;
         }
 
-        switch (type) {
-            case MYSQL:
-                backend = new Hikari(cfg.getString("host"), cfg.getInt("port"), cfg.getString("database"), cfg.getString("username"), cfg.getString("password"));
-                break;
-            case SQLITE:
-                backend = new SQLiteBackend(getDataFolder() + "/" + cfg.getString("file", "database.db"));
-                break;
-            case MONGODB:
-                backend = new MongoBackend(cfg.getString("uri", "mongodb://localhost:27017"), cfg.getString("database", "syntri"));
-                break;
-            case POSTGRESQL:
-                backend = new PostgreSQLBackend(cfg.getString("host"), cfg.getInt("port"), cfg.getString("database"), cfg.getString("username"), cfg.getString("password"));
-                break;
-            case MARIADB:
-                backend = new MariaDBBackend(cfg.getString("host"), cfg.getInt("port"), cfg.getString("database"), cfg.getString("username"), cfg.getString("password"));
-                break;
-            case ORACLE:
-                backend = new OracleBackend(cfg.getString("host"), cfg.getInt("port"), cfg.getString("service"), cfg.getString("username"), cfg.getString("password"));
-                break;
-            case FIREBIRD:
-                backend = new FirebirdBackend(cfg.getString("host"), cfg.getInt("port"), cfg.getString("database"), cfg.getString("username"), cfg.getString("password"));
-                break;
-            case SQLSERVER:
-                backend = new SQLServerBackend(cfg.getString("host"), cfg.getInt("port"), cfg.getString("database"), cfg.getString("username"), cfg.getString("password"));
-                break;
+        try {
+            if (type == BackendType.MONGODB) {
+                this.mongoBackend = BackendFactory.buildMongoBackend(cfg);
+                mongoBackend.connect();
+                if (mongoBackend.isConnected()) {
+                    DataHandler.setService(new MongoDataService(mongoBackend.getDatabase()));
+                    getLogger().info("§7[Syntri] MongoDB conectado com sucesso.");
+                }
+            } else {
+                this.backend = BackendFactory.buildSQLBackend(cfg, getDataFolder());
+                backend.connect();
+                if (backend.isConnected()) {
+                    DataHandler.setService(new SQLDataService(backend));
+                    DataHandler.createTables();
+                    getLogger().info("§7[Syntri] Banco de dados SQL conectado com sucesso.");
+                }
+            }
+        } catch (Exception e) {
+            getLogger().severe("§cErro ao conectar com o banco de dados:");
+            e.printStackTrace();
         }
-
-        backend.connect();
     }
+
+
     @Override
     public FileConfiguration getConfig() {
         return this.config;

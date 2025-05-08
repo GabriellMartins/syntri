@@ -134,4 +134,33 @@ public class KitManager {
             return null;
         }
     }
+
+    public static boolean giveKitItems(Player player, Kit kit) {
+        ItemStack[] inventoryContents = player.getInventory().getContents();
+
+        for (ItemStack item : kit.getItems()) {
+            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(item);
+            if (!remaining.isEmpty()) {
+                player.sendMessage("§cSeu inventário está cheio. Não foi possível receber todos os itens do kit.");
+                return false;
+            }
+        }
+
+        ItemStack[] currentArmor = player.getInventory().getArmorContents();
+        for (int i = 0; i < kit.getArmor().size(); i++) {
+            if (i < currentArmor.length && currentArmor[i] != null && currentArmor[i].getType() != Material.AIR) {
+                player.sendMessage("§cVocê já está usando uma armadura. Remova-a antes de aplicar o kit.");
+                return false;
+            }
+        }
+
+        for (int i = 0; i < kit.getArmor().size(); i++) {
+            if (i < currentArmor.length) {
+                currentArmor[i] = kit.getArmor().get(i);
+            }
+        }
+
+        player.getInventory().setArmorContents(currentArmor);
+        return true;
+    }
 }

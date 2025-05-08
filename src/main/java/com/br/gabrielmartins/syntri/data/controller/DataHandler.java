@@ -1,37 +1,40 @@
 package com.br.gabrielmartins.syntri.data.controller;
 
-import com.br.gabrielmartins.syntri.data.table.DataTable;
+import com.br.gabrielmartins.syntri.data.service.DataService;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 
 public class DataHandler {
 
+   @Getter @Setter private static DataService service;
+
+
     public static void createTables() {
-        for (DataTable table : DataTable.values()) {
-            table.createTable();
-        }
+        service.createTables();
     }
 
     public static void saveHome(Player player, String homeName) {
-        DataTable.HOME.saveHome(player, homeName);
+        service.saveHome(player, homeName);
     }
 
     public static void saveWarp(Player player, String warpName) {
-        DataTable.WARP.saveWarp(player, warpName);
+        service.saveWarp(player, warpName);
     }
 
     public static void listHomes(Player player) {
-        DataTable.HOME.listHomes(player);
+        service.listHomes(player);
     }
 
     public static void listWarps(Player player) {
-        DataTable.WARP.listWarp(player);
+        service.listWarps(player);
     }
 
     public static void teleportToHome(Player player, String homeName) {
-        DataTable.HOME.teleportToHome(player, homeName);
+        service.teleportToHome(player, homeName);
     }
 
     public static void teleportToWarp(Player player, String warpName) {
-        DataTable.WARP.teleportToWarp(player, warpName);
+        service.teleportToWarp(player, warpName);
     }
 }
