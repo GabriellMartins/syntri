@@ -1,6 +1,7 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
 import com.br.gabrielmartins.engine.api.cooldown.Cooldown;
+import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
 ;
 import org.bukkit.Bukkit;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@CommandInfo(names = {"gerar"}, permission = {"syntri.tp"})
 public class SyntriGerarTokenCommand implements CommandExecutor {
 
     private static final Map<UUID, CachedToken> tokenCache = new HashMap<>();

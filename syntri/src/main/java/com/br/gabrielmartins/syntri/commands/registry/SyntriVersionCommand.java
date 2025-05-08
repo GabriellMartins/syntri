@@ -1,9 +1,11 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
+import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+@CommandInfo(names = {"version"}, permission = {"syntri.tp"})
 public class SyntriVersionCommand implements CommandExecutor {
 
     @Override

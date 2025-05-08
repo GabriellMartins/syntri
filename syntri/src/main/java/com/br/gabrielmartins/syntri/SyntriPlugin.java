@@ -85,8 +85,8 @@ public final class SyntriPlugin extends JavaPlugin {
         new ScoreboardListener();
         new ConfigListener();
         new CommandLoader(this).load("com.br.gabrielmartins.syntri.commands");
+        this.listenerLoad = new LoaderListener(this, new InventoryLoader());
         listenerLoad.listener("com.br.gabrielmartins.syntri.listener");
-
         String language = getConfig().getString("general.language", "br");
         Translate.setLanguage(language);
         Translate.load();

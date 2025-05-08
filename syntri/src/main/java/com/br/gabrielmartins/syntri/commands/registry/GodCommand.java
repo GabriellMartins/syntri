@@ -1,6 +1,7 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
 import com.br.gabrielmartins.engine.api.actionbar.ActionBarUtil;
+import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@CommandInfo(names = {"god", "deus"}, permission = {"syntri.tp"})
 public class GodCommand implements CommandExecutor {
 
     private static final Set<UUID> godPlayers = new HashSet<>();

@@ -30,10 +30,10 @@ dependencies {
     compileOnly(files("libs/Vault.jar"))
 
     implementation(kotlin("stdlib-jdk8"))
-    compileOnly(project(":version-api"))
-    compileOnly(project(":version-1_8_9"))
-    compileOnly(project(":version-1_20_4"))
-    compileOnly(project(":syntri-engine"))
+    implementation(project(":version-api"))
+    implementation(project(":version-1_8_9"))
+    implementation(project(":version-1_20_4"))
+    implementation(project(":syntri-engine"))
 
     api("org.mongodb:mongodb-driver-sync:4.11.0")
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")

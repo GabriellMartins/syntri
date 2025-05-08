@@ -1,11 +1,13 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
 import com.br.gabrielmartins.engine.data.controller.DataHandler;
+import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@CommandInfo(names = {"warp"}, permission = {"syntri.tp"})
 public class WarpCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

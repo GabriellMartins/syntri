@@ -1,6 +1,7 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
 import com.br.gabrielmartins.engine.api.cooldown.Cooldown;
+import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
 import com.br.gabrielmartins.engine.utils.combat.CombatLogManager;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
 
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@CommandInfo(names = {"tp"}, permission = {"syntri.tp"})
 public class TeleportCommand implements CommandExecutor {
 
     private static final Map<UUID, UUID> pendingRequests = new HashMap<>();

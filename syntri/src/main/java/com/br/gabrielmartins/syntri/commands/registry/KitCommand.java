@@ -2,12 +2,14 @@ package com.br.gabrielmartins.syntri.commands.registry;
 
 import com.br.gabrielmartins.engine.kit.Kit;
 import com.br.gabrielmartins.engine.kit.manager.KitManager;
+import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@CommandInfo(names = {"kit"}, permission = {"syntri.tp"})
 public class KitCommand implements CommandExecutor {
 
     @Override
