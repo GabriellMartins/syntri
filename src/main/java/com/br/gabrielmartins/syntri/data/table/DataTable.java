@@ -137,6 +137,53 @@ public enum DataTable {
         }
     }
 
+
+    public void saveHome(Player player, String homeName) {
+        String uuid = player.getUniqueId().toString();
+        String world = player.getWorld().getName();
+        double x = player.getLocation().getX();
+        double y = player.getLocation().getY();
+        double z = player.getLocation().getZ();
+
+        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(getInsertSQL())) {
+
+            stmt.setString(1, uuid);
+            stmt.setString(2, homeName);
+            stmt.setString(3, world);
+            stmt.setDouble(4, x);
+            stmt.setDouble(5, y);
+            stmt.setDouble(6, z);
+
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveWarp(Player player, String warpName) {
+        String uuid = player.getUniqueId().toString();
+        String world = player.getWorld().getName();
+        double x = player.getLocation().getX();
+        double y = player.getLocation().getY();
+        double z = player.getLocation().getZ();
+
+        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(getInsertSQL())) {
+
+            stmt.setString(1, uuid);
+            stmt.setString(2, warpName);
+            stmt.setString(3, world);
+            stmt.setDouble(4, x);
+            stmt.setDouble(5, y);
+            stmt.setDouble(6, z);
+
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public ResultSet listHomes(Player player) {
         String uuid = player.getUniqueId().toString();
         try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
