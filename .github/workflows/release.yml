@@ -18,8 +18,11 @@ jobs:
       - name: Configurar Java
         uses: actions/setup-java@v3
         with:
-          java-version: '17' # ou sua versão
+          java-version: '17'
           distribution: 'temurin'
+
+      - name: Dar permissão ao gradlew
+        run: chmod +x ./gradlew
 
       - name: Buildar Plugin
         run: ./gradlew build
@@ -31,6 +34,6 @@ jobs:
           name: Release ${{ github.ref_name }}
           body: |
             Essa é a release para a versão `${{ github.ref_name }}`.
-          files: build/libs/*.jar # ⬅️ envia todos os .jar gerados
+          files: build/libs/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
