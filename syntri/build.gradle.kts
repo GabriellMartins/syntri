@@ -21,8 +21,11 @@ tasks.compileJava {
 
 repositories {
     mavenCentral()
+    mavenLocal()
+
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://repo.md-5.net/content/repositories/snapshots/")
 }
 
 dependencies {
