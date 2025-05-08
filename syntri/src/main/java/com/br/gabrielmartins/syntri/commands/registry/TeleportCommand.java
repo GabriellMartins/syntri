@@ -1,19 +1,22 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
+import com.br.gabrielmartins.engine.api.cooldown.Cooldown;
+import com.br.gabrielmartins.engine.utils.combat.CombatLogManager;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
-import com.br.gabrielmartins.syntri.api.cooldown.CooldownActionBarAPI;
-import com.br.gabrielmartins.syntri.commands.CommandInfo;
-import com.br.gabrielmartins.syntri.utils.combat.CombatLogManager;
+
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-@CommandInfo(names = {"tp", "tpall", "tpa"}, permission = {"syntri.tp", "syntri.tpall", "syntri.tpa"})
 public class TeleportCommand implements CommandExecutor {
 
     private static final Map<UUID, UUID> pendingRequests = new HashMap<>();
@@ -132,8 +135,8 @@ public class TeleportCommand implements CommandExecutor {
                             return true;
                         }
 
-                        if (CooldownActionBarAPI.isCoolingDown(player)) {
-                            CooldownActionBarAPI.sendActionBar(player, "§cAguardando para reenviar tpa...");
+                        if (Cooldown.INSTANCE.isCoolingDown(player)) {
+                            Cooldown.INSTANCE.sendActionBar(player, "§cAguardando para reenviar tpa...");
                             return true;
                         }
 
@@ -152,7 +155,7 @@ public class TeleportCommand implements CommandExecutor {
                         msg.addExtra(deny);
                         targetPlayer.spigot().sendMessage(msg);
 
-                        CooldownActionBarAPI.start(SyntriPlugin.getInstance(), player, 15, "§c§lCooldown ");
+                        Cooldown.INSTANCE.start(SyntriPlugin.getInstance(), player, 15, "§c§lCooldown ");
 
                         new BukkitRunnable() {
                             @Override

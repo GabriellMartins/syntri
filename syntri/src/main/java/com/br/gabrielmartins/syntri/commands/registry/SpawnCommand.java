@@ -1,14 +1,11 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.syntri.commands.CommandInfo;
-import com.br.gabrielmartins.syntri.data.controller.DataHandler;
-import com.br.gabrielmartins.syntri.data.table.DataTable;
-import org.bukkit.command.*;
+import com.br.gabrielmartins.engine.data.table.DataTable;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import javax.xml.crypto.Data;
-
-@CommandInfo(names = {"spawn", "setspawn"}, permission = {"syntri.spawn", "syntri.setspawn"})
 public class SpawnCommand implements CommandExecutor {
 
     @Override

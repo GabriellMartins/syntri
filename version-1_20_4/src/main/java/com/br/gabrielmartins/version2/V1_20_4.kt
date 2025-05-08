@@ -1,4 +1,4 @@
-package com.br.syntri.version.impl
+package com.br.gabrielmartins.version2
 
 import com.br.syntri.version.VersionSupport
 import net.md_5.bungee.api.ChatMessageType
@@ -9,7 +9,8 @@ class V1_20_4 : VersionSupport {
     override fun sendActionBar(player: Player, message: String) {
         player.spigot().sendMessage(
             ChatMessageType.ACTION_BAR,
-            arrayOf(TextComponent(message))
+            TextComponent(message)
         )
     }
+
 }

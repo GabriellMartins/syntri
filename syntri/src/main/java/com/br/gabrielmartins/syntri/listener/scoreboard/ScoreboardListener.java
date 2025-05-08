@@ -1,13 +1,13 @@
 package com.br.gabrielmartins.syntri.listener.scoreboard;
 
+import com.br.gabrielmartins.engine.api.scoreboard.ScoreboardManager;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
-import com.br.gabrielmartins.syntri.api.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.EventHandler;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ScoreboardListener implements Listener {

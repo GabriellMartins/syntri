@@ -1,13 +1,10 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.syntri.commands.CommandInfo;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(names = {"ping"}, permission = {"syntri.ping"})
 public class PingCommand implements CommandExecutor {
 
     @Override

@@ -1,6 +1,6 @@
 package com.br.gabrielmartins.engine.kit.manager;
 
-import com.br.gabrielmartins.commons.kit.Kit;
+import com.br.gabrielmartins.engine.kit.Kit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;

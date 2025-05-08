@@ -1,7 +1,7 @@
 package com.br.gabrielmartins.engine.api.inventory.loader;
 
-import com.br.gabrielmartins.commons.api.inventory.InventoryInfo;
-import com.br.gabrielmartins.commons.api.inventory.custom.CustomInventory;
+import com.br.gabrielmartins.engine.api.inventory.InventoryInfo;
+import com.br.gabrielmartins.engine.api.inventory.custom.CustomInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

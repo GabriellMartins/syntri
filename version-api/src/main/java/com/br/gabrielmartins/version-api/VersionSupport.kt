@@ -1,4 +1,7 @@
-package com.br.gabrielmartins.`version-api`
+package com.br.syntri.version
 
-class VersionSupport {
+import org.bukkit.entity.Player
+
+interface VersionSupport {
+    fun sendActionBar(player: Player, message: String)
 }

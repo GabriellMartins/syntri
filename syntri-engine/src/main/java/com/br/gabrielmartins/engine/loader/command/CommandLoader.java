@@ -1,6 +1,6 @@
 package com.br.gabrielmartins.engine.loader.command;
 
-import com.br.gabrielmartins.commons.loader.command.info.CommandInfo;
+import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;

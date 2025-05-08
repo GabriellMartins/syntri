@@ -1,22 +1,30 @@
 package com.br.gabrielmartins.syntri.listener.general;
 
+import com.br.gabrielmartins.engine.api.translate.Translate;
+import com.br.gabrielmartins.engine.utils.color.ColorUtil;
+import com.br.gabrielmartins.engine.utils.ip.IPUtils;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
-import com.br.gabrielmartins.syntri.api.translate.Translate;
-import com.br.gabrielmartins.syntri.utils.color.ColorUtil;
-import com.br.gabrielmartins.syntri.utils.ip.IPUtils;
+
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.*;
-import org.bukkit.event.block.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.event.vehicle.*;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
@@ -28,7 +36,8 @@ public class GeneralListener implements Listener {
         return plugin.getConfig().getBoolean("general." + path, false);
     }
 
-    @EventHandler public void onJoin(PlayerJoinEvent e) {
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage(null);
         if (!cfg("welcome-message.enabled")) return;
 

@@ -1,14 +1,14 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.syntri.api.actionbar.ActionBarUtil;
-import com.br.gabrielmartins.syntri.api.translate.Translate;
-import com.br.gabrielmartins.syntri.commands.CommandInfo;
+import com.br.gabrielmartins.engine.api.actionbar.ActionBarUtil;
+import com.br.gabrielmartins.engine.api.translate.Translate;
 import org.bukkit.Bukkit;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@CommandInfo(names = {"chat"}, permission = {"syntri.chat"})
 public class ChatCommand implements CommandExecutor {
 
     private static boolean enabled = true;
@@ -86,7 +86,7 @@ public class ChatCommand implements CommandExecutor {
                     return;
                 }
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    ActionBarUtil.send(p, message);
+                    ActionBarUtil.INSTANCE.send(p, message);
                 }
                 ticks += 20;
             }

@@ -2,10 +2,15 @@ package com.br.gabrielmartins.syntri.listener.manager;
 
 import com.br.gabrielmartins.syntri.SyntriPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.event.*;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class ListenerRegistry {
 

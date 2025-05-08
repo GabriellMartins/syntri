@@ -1,13 +1,11 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.syntri.api.translate.Translate;
-import com.br.gabrielmartins.syntri.commands.CommandInfo;
+import com.br.gabrielmartins.engine.api.translate.Translate;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(names = {"lang"}, permission = {"syntri.lang"})
 public class LangCommand implements CommandExecutor {
 
     @Override

@@ -1,4 +1,4 @@
-package com.br.gabrielmartins.commons.api.cooldown
+package com.br.gabrielmartins.engine.api.cooldown
 
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -48,7 +48,7 @@ object Cooldown {
         return end != null && System.currentTimeMillis() < end
     }
 
-    private fun sendActionBar(player: Player, message: String) {
+    fun sendActionBar(player: Player, message: String) {
         try {
             if (majorVersion >= 108) {
                 player.spigot().sendMessage(

@@ -1,8 +1,8 @@
 package com.br.gabrielmartins.engine.data.service.sql;
 
-import com.br.gabrielmartins.syntri.backend.Backend;
-import com.br.gabrielmartins.syntri.data.service.DataService;
-import com.br.gabrielmartins.syntri.data.table.DataTable;
+import com.br.gabrielmartins.engine.backend.Backend;
+import com.br.gabrielmartins.engine.data.service.DataService;
+import com.br.gabrielmartins.engine.data.table.DataTable;
 import org.bukkit.entity.Player;
 
 public class SQLDataService implements DataService {

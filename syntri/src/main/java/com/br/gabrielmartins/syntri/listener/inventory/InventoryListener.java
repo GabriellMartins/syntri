@@ -1,7 +1,7 @@
 package com.br.gabrielmartins.syntri.listener.inventory;
 
+import com.br.gabrielmartins.engine.api.inventory.custom.CustomInventory;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
-import com.br.gabrielmartins.syntri.api.inventory.custom.CustomInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

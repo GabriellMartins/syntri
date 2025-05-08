@@ -1,13 +1,14 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
+import com.br.gabrielmartins.engine.api.cooldown.Cooldown;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
-import com.br.gabrielmartins.syntri.api.cooldown.CooldownActionBarAPI;
-import com.br.gabrielmartins.syntri.commands.CommandInfo;
+;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -19,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@CommandInfo(names = {"syntri"}, permission = {"syntri.gerar"})
 public class SyntriGerarTokenCommand implements CommandExecutor {
 
     private static final Map<UUID, CachedToken> tokenCache = new HashMap<>();
@@ -48,7 +48,7 @@ public class SyntriGerarTokenCommand implements CommandExecutor {
                 long remainingSeconds = (cached.expirationTime - System.currentTimeMillis()) / 1000;
                 player.sendTitle("§eToken já gerado", "§7Aguarde para gerar novamente");
 
-                CooldownActionBarAPI.start(SyntriPlugin.getInstance(), player, (int) remainingSeconds, "§bRecriar em: ");
+                Cooldown.INSTANCE.start(com.br.gabrielmartins.syntri.SyntriPlugin.getInstance(), player, (int) remainingSeconds, "§bRecriar em: ");
                 player.sendMessage("§e✔ Você já possui um token válido!");
                 player.sendMessage("§7Token atual: §f" + cached.token);
                 player.sendMessage("§7Use: §f/syntri vincular §e" + cached.token);

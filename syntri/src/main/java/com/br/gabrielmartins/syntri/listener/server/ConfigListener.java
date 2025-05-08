@@ -1,9 +1,9 @@
 package com.br.gabrielmartins.syntri.listener.server;
 
 import com.br.gabrielmartins.syntri.SyntriPlugin;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.ChatColor;
 
 public class ConfigListener {
 

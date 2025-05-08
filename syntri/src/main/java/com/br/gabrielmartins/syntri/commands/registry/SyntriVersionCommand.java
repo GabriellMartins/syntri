@@ -1,12 +1,9 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.syntri.SyntriPlugin;
-import com.br.gabrielmartins.syntri.commands.CommandInfo;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-@CommandInfo(names = {"syntriversion"}, permission = {"syntri.version"})
 public class SyntriVersionCommand implements CommandExecutor {
 
     @Override
@@ -18,7 +15,7 @@ public class SyntriVersionCommand implements CommandExecutor {
                 return true;
             }
 
-            String version = SyntriPlugin.getInstance().getDescription().getVersion();
+            String version = com.br.gabrielmartins.syntri.SyntriPlugin.getInstance().getDescription().getVersion();
             sender.sendMessage("§6Syntri §fv" + version + " §7- O essencial do seu servidor.");
             return true;
         }

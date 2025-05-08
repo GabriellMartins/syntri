@@ -1,9 +1,9 @@
 package com.br.gabrielmartins.syntri.data.table;
 
 import com.br.gabrielmartins.syntri.SyntriPlugin;
-import com.br.gabrielmartins.syntri.api.translate.Translate;
-import com.br.gabrielmartins.syntri.backend.Backend;
-import com.br.gabrielmartins.syntri.backend.sqllite.SQLiteBackend;
+import com.br.gabrielmartins.engine.api.translate.Translate;
+import com.br.gabrielmartins.engine.backend.Backend;
+import com.br.gabrielmartins.engine.backend.sqllite.SQLiteBackend;
 import org.bukkit.entity.Player;
 
 import java.sql.*;

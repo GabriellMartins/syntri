@@ -1,13 +1,15 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.syntri.api.actionbar.ActionBarUtil;
-import com.br.gabrielmartins.syntri.commands.CommandInfo;
-import org.bukkit.command.*;
+import com.br.gabrielmartins.engine.api.actionbar.ActionBarUtil;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
-@CommandInfo(names = {"god"}, permission = {"syntri.god"})
 public class GodCommand implements CommandExecutor {
 
     private static final Set<UUID> godPlayers = new HashSet<>();
@@ -34,7 +36,7 @@ public class GodCommand implements CommandExecutor {
 
         player.sendMessage("§eModo Deus " + (enabled ? "§aativado§e!" : "§cdesativado§e!"));
 
-        ActionBarUtil.send(player, enabled ? "§aModo Deus ATIVADO!" : "§cModo Deus DESATIVADO!");
+        ActionBarUtil.INSTANCE.send(player, enabled ? "§aModo Deus ATIVADO!" : "§cModo Deus DESATIVADO!");
 
         return true;
     }

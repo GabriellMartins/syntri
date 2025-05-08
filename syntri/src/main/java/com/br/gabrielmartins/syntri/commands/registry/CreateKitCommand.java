@@ -1,11 +1,11 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.syntri.commands.CommandInfo;
-import com.br.gabrielmartins.syntri.kit.manager.KitManager;
-import org.bukkit.command.*;
+import com.br.gabrielmartins.engine.kit.manager.KitManager;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(names = {"createkit"}, permission = {"syntri.createkit"})
 public class CreateKitCommand implements CommandExecutor {
 
     @Override

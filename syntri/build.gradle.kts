@@ -1,13 +1,12 @@
 plugins {
     java
+    kotlin("jvm") version "1.9.10"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("net.minecrell.plugin-yml.bukkit") version "0.3.0"
-    id("io.freefair.lombok") version "8.4"
     id("checkstyle")
-    id("com.github.spotbugs") version "5.0.13"
 }
 
-group = "com.br.gabrielmartins"
+group = "com.br.gabrielmartins.syntri"
 version = "1.0.0"
 
 java {
@@ -15,37 +14,33 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-
 tasks.compileJava {
-    options.release.set(8)
+    options.release.set(17)
     options.encoding = "UTF-8"
 }
 
 repositories {
     mavenCentral()
-    maven("https://repo.codemc.io/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
-    maven("https://jitpack.io")
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-    compileOnly(files("libs/place.jar"))
-    compileOnly("org.jetbrains:annotations:24.0.1")
-    implementation("net.md-5:bungeecord-chat:1.8-SNAPSHOT")
+    compileOnly(files("C:\\Users\\GabrielMartins\\Desktop\\server\\build\\plugins\\place.jar"))
+    compileOnly(files("libs/Vault.jar"))
+
+    implementation(kotlin("stdlib-jdk8"))
+    compileOnly(project(":version-api"))
+    compileOnly(project(":version-1_8_9"))
+    compileOnly(project(":version-1_20_4"))
+    compileOnly(project(":syntri-engine"))
+
+    api("org.mongodb:mongodb-driver-sync:4.11.0")
+    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
     implementation("org.json:json:20210307")
-    implementation("com.zaxxer:HikariCP:4.0.3")
-    implementation("org.postgresql:postgresql:42.7.3")
-    implementation("org.mongodb:mongodb-driver-sync:4.11.0")
-    implementation("org.mariadb.jdbc:mariadb-java-client:3.3.1")
-    implementation("com.oracle.database.jdbc:ojdbc11:23.2.0.0")
-    implementation("org.firebirdsql.jdbc:jaybird:4.0.5.java11")
-    implementation("com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11")
-    implementation("org.xerial:sqlite-jdbc:3.45.2.0")
-    implementation("com.mysql:mysql-connector-j:8.4.0")
-    implementation("org.reflections:reflections:0.10.2")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -60,13 +55,11 @@ bukkit {
     softDepend = listOf("PlaceholderAPI")
 }
 
-tasks.named("checkstyleMain").configure {
-    enabled = false
+checkstyle {
+    toolVersion = "10.12.2"
+    configFile = file("config/checkstyle/checkstyle.xml")
+    isIgnoreFailures = true
 }
-tasks.named("spotbugsMain").configure {
-    enabled = false
-}
-
 
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     archiveClassifier.set("")
@@ -82,4 +75,12 @@ tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJ
 
 tasks.build {
     dependsOn(tasks.shadowJar)
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(17)
 }

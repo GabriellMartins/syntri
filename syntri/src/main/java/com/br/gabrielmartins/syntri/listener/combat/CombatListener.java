@@ -1,6 +1,6 @@
 package com.br.gabrielmartins.syntri.listener.combat;
 
-import com.br.gabrielmartins.syntri.utils.combat.CombatLogManager;
+import com.br.gabrielmartins.engine.utils.combat.CombatLogManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

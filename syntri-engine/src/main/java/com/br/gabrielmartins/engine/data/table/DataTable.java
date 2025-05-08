@@ -1,10 +1,11 @@
 package com.br.gabrielmartins.engine.data.table;
 
-import com.br.gabrielmartins.syntri.SyntriPlugin;
-import com.br.gabrielmartins.syntri.api.translate.Translate;
-import com.br.gabrielmartins.syntri.backend.Backend;
-import com.br.gabrielmartins.syntri.backend.sqllite.SQLiteBackend;
+import com.br.gabrielmartins.engine.api.translate.Translate;
+import com.br.gabrielmartins.engine.backend.Backend;
+import com.br.gabrielmartins.engine.backend.sqllite.SQLiteBackend;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.sql.*;
 
@@ -61,8 +62,20 @@ public enum DataTable {
         return selectSQL;
     }
 
+    private static Backend getBackend() {
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("Syntri");
+        if (plugin == null) {
+            throw new IllegalStateException("Plugin 'Syntri' não encontrado.");
+        }
+        try {
+            return (Backend) plugin.getClass().getMethod("getBackend").invoke(plugin);
+        } catch (Exception e) {
+            throw new IllegalStateException("Não foi possível acessar o backend do plugin 'Syntri'.", e);
+        }
+    }
+
     public String getInsertSQL() {
-        Backend backend = SyntriPlugin.getInstance().getBackend();
+        Backend backend = getBackend();
         boolean isSQLite = backend instanceof SQLiteBackend;
 
         switch (this) {
@@ -84,7 +97,7 @@ public enum DataTable {
     }
 
     public void createTable() {
-        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+        try (Connection conn = getBackend().getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(getCreateTableSQL());
         } catch (Exception e) {
@@ -98,7 +111,7 @@ public enum DataTable {
         double y = player.getLocation().getY();
         double z = player.getLocation().getZ();
 
-        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+        try (Connection conn = getBackend().getConnection();
              PreparedStatement stmt = conn.prepareStatement(SPAWN.getInsertSQL())) {
 
             stmt.setString(1, world);
@@ -113,7 +126,7 @@ public enum DataTable {
     }
 
     public static void teleportToSpawn(Player player) {
-        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+        try (Connection conn = getBackend().getConnection();
              PreparedStatement stmt = conn.prepareStatement("SELECT world, x, y, z FROM spawn WHERE id = 1")) {
 
             ResultSet rs = stmt.executeQuery();
@@ -137,7 +150,6 @@ public enum DataTable {
         }
     }
 
-
     public void saveHome(Player player, String homeName) {
         String uuid = player.getUniqueId().toString();
         String world = player.getWorld().getName();
@@ -145,7 +157,7 @@ public enum DataTable {
         double y = player.getLocation().getY();
         double z = player.getLocation().getZ();
 
-        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+        try (Connection conn = getBackend().getConnection();
              PreparedStatement stmt = conn.prepareStatement(getInsertSQL())) {
 
             stmt.setString(1, uuid);
@@ -168,7 +180,7 @@ public enum DataTable {
         double y = player.getLocation().getY();
         double z = player.getLocation().getZ();
 
-        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+        try (Connection conn = getBackend().getConnection();
              PreparedStatement stmt = conn.prepareStatement(getInsertSQL())) {
 
             stmt.setString(1, uuid);
@@ -186,7 +198,7 @@ public enum DataTable {
 
     public ResultSet listHomes(Player player) {
         String uuid = player.getUniqueId().toString();
-        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+        try (Connection conn = getBackend().getConnection();
              PreparedStatement stmt = conn.prepareStatement(getListSQL())) {
 
             stmt.setString(1, uuid);
@@ -211,7 +223,7 @@ public enum DataTable {
 
     public ResultSet listWarp(Player player) {
         String uuid = player.getUniqueId().toString();
-        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+        try (Connection conn = getBackend().getConnection();
              PreparedStatement stmt = conn.prepareStatement(getListSQL())) {
 
             stmt.setString(1, uuid);
@@ -236,7 +248,7 @@ public enum DataTable {
 
     public void teleportToHome(Player player, String homeName) {
         String uuid = player.getUniqueId().toString();
-        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+        try (Connection conn = getBackend().getConnection();
              PreparedStatement stmt = conn.prepareStatement(getSelectSQL())) {
 
             stmt.setString(1, uuid);
@@ -266,7 +278,7 @@ public enum DataTable {
 
     public void teleportToWarp(Player player, String warpName) {
         String uuid = player.getUniqueId().toString();
-        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+        try (Connection conn = getBackend().getConnection();
              PreparedStatement stmt = conn.prepareStatement(getSelectSQL())) {
 
             stmt.setString(1, uuid);

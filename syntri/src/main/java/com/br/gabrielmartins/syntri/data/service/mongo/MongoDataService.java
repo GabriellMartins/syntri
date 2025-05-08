@@ -1,9 +1,8 @@
 package com.br.gabrielmartins.syntri.data.service.mongo;
 
-import com.br.gabrielmartins.syntri.data.service.DataService;
+import com.br.gabrielmartins.engine.data.service.DataService;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import lombok.var;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

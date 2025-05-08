@@ -1,6 +1,6 @@
 package com.br.gabrielmartins.syntri.data.controller;
 
-import com.br.gabrielmartins.syntri.data.service.DataService;
+import com.br.gabrielmartins.engine.data.service.DataService;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;

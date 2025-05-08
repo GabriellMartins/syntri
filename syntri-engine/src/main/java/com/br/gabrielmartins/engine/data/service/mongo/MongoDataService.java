@@ -1,6 +1,6 @@
 package com.br.gabrielmartins.engine.data.service.mongo;
 
-import com.br.gabrielmartins.syntri.data.service.DataService;
+import com.br.gabrielmartins.engine.data.service.DataService;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;

@@ -1,5 +1,6 @@
-package com.br.gabrielmartins.commons.utils.placeholder;
+package com.br.gabrielmartins.syntri;
 
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
