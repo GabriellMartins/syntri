@@ -1,15 +1,17 @@
 package com.br.gabrielmartins.syntri.kit.manager;
 
 import com.br.gabrielmartins.syntri.kit.Kit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class KitManager {
+
     private static final Map<String, Kit> kits = new HashMap<>();
     private static final Map<String, Map<UUID, Long>> cooldowns = new HashMap<>();
     private static File kitFile;
@@ -20,44 +22,65 @@ public class KitManager {
         kitFile = file;
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-        for (String name : config.getKeys(false)) {
-            String permission = config.getString(name + ".permission");
-            String timeString = config.getString(name + ".time", "0s");
+        for (String kitName : config.getKeys(false)) {
+            String permission = config.getString(kitName + ".permission");
+            String timeString = config.getString(kitName + ".time", "0s");
             long cooldown = parseTimeToMillis(timeString);
 
-            List<ItemStack> contents = getItemList(config.getList(name + ".items"));
-            List<ItemStack> armor = getItemList(config.getList(name + ".armor"));
+            List<ItemStack> items = loadItems(config, kitName + ".items");
+            List<ItemStack> armor = loadItems(config, kitName + ".armor");
 
-            kits.put(name.toLowerCase(), new Kit(name, permission, contents, armor, cooldown));
+            kits.put(kitName.toLowerCase(), new Kit(kitName, permission, items, armor, cooldown));
         }
     }
 
-    private static List<ItemStack> getItemList(List<?> rawItems) {
-        if (rawItems == null) return Collections.emptyList();
-        return rawItems.stream()
-                .filter(Objects::nonNull)
-                .filter(ItemStack.class::isInstance)
-                .map(ItemStack.class::cast)
-                .filter(item -> item.getType() != null)
-                .collect(Collectors.toList());
+    private static List<ItemStack> loadItems(YamlConfiguration config, String path) {
+        List<ItemStack> items = new ArrayList<>();
+
+        if (!config.isConfigurationSection(path)) return items;
+
+        for (String key : config.getConfigurationSection(path).getKeys(false)) {
+            String id = config.getString(path + "." + key + ".id", "STONE");
+            int amount = config.getInt(path + "." + key + ".amount", 1);
+
+            Material material = Material.matchMaterial(id);
+            if (material != null) {
+                items.add(new ItemStack(material, amount));
+            }
+        }
+
+        return items;
     }
 
     public static void createKit(Player player, String name, String permission, String time) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(kitFile);
 
-        List<ItemStack> contents = Arrays.stream(player.getInventory().getContents())
-                .filter(item -> item != null && item.getType() != null)
-                .collect(Collectors.toList());
-
-        List<ItemStack> armor = Arrays.stream(player.getInventory().getArmorContents())
-                .filter(item -> item != null && item.getType() != null)
-                .collect(Collectors.toList());
-
-
         config.set(name + ".permission", permission);
         config.set(name + ".time", time);
-        config.set(name + ".items", contents);
-        config.set(name + ".armor", armor);
+
+        Map<String, Object> itemMap = new HashMap<>();
+        Map<String, Object> armorMap = new HashMap<>();
+
+        ItemStack[] contents = player.getInventory().getContents();
+        ItemStack[] armor = player.getInventory().getArmorContents();
+
+        int index = 0;
+        for (ItemStack item : contents) {
+            if (item != null && item.getType() != Material.AIR) {
+                String path = "items.item" + index++;
+                config.set(name + "." + path + ".id", item.getType().name());
+                config.set(name + "." + path + ".amount", item.getAmount());
+            }
+        }
+
+        index = 0;
+        for (ItemStack item : armor) {
+            if (item != null && item.getType() != Material.AIR) {
+                String path = "armor.armor" + index++;
+                config.set(name + "." + path + ".id", item.getType().name());
+                config.set(name + "." + path + ".amount", item.getAmount());
+            }
+        }
 
         try {
             config.save(kitFile);

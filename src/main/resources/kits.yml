@@ -1,71 +1,104 @@
-# ──────────────────────────────────────────────────────────────
-# 🧰 CONFIGURAÇÃO DE KITS - SYSTRI PLUGIN
-# ──────────────────────────────────────────────────────────────
-#
-# Cada entrada representa um kit que pode ser usado via comando /kit.
-#
-# 📝 EXEMPLO DE ESTRUTURA:
-#
-# nome_do_kit:
-#   permission: "syntri.kit.<nome>"    → (Opcional) Permissão necessária
-#   time: "10s"                         → (Opcional) Tempo de cooldown por jogador
-#   items:                              → Lista de itens que o jogador receberá
-#     - ==: org.bukkit.inventory.ItemStack
-#       type: STONE_SWORD
-#     - ==: org.bukkit.inventory.ItemStack
-#       type: BREAD
-#       amount: 16
-#
-# ⏱️ FORMATOS SUPORTADOS PARA TIME:
-#   - "10s"  → 10 segundos
-#   - "5m"   → 5 meses
-#   - "1d"   → 1 dia
-#   - "2sa"  → 2 semanas
-#   - "0s"   → sem cooldown (uso livre)
-#
-# 🛡️ PERMISSÕES:
-#   - Defina uma permissão no campo `permission` se quiser restringir o acesso.
-#   - Deixe em branco ou remova para liberar para todos os jogadores.
-#
-# 🧪 ITENS:
-#   - O formato segue o padrão do Bukkit (ItemStack serializado).
-#   - Pode usar plugins como GUI Editor para facilitar a criação.
-#
-# 💡 USE /kit para ver a lista de kits disponíveis no servidor.
-# 💡 USE /kit <nome> para resgatar um kit específico.
-#
-# ──────────────────────────────────────────────────────────────
-
 starter:
   permission: "syntri.kit.starter"
   time: "10s"
   items:
-    - ==: org.bukkit.inventory.ItemStack
-      type: STONE_SWORD
-    - ==: org.bukkit.inventory.ItemStack
-      type: BREAD
+    item1:
+      id: STONE_SWORD
+      amount: 1
+    item2:
+      id: BREAD
       amount: 16
-    - ==: org.bukkit.inventory.ItemStack
-      type: LEATHER_HELMET
+    item3:
+      id: TORCH
+      amount: 8
+  armor:
+    armor1:
+      id: LEATHER_HELMET
+      amount: 1
+    armor2:
+      id: LEATHER_CHESTPLATE
+      amount: 1
+
+builder:
+  permission: "syntri.kit.builder"
+  time: "30min"
+  items:
+    item1:
+      id: IRON_PICKAXE
+      amount: 1
+    item2:
+      id: COBBLESTONE
+      amount: 64
+    item3:
+      id: LADDER
+      amount: 16
+  armor:
+    armor1:
+      id: LEATHER_BOOTS
+      amount: 1
+
+warrior:
+  permission: "syntri.kit.warrior"
+  time: "1d"
+  items:
+    item1:
+      id: IRON_SWORD
+      amount: 1
+    item2:
+      id: COOKED_BEEF
+      amount: 32
+    item3:
+      id: SHIELD
+      amount: 1
+  armor:
+    armor1:
+      id: IRON_HELMET
+      amount: 1
+    armor2:
+      id: IRON_CHESTPLATE
+      amount: 1
+
+archer:
+  permission: "syntri.kit.archer"
+  time: "2h"
+  items:
+    item1:
+      id: BOW
+      amount: 1
+    item2:
+      id: ARROW
+      amount: 64
+    item3:
+      id: OAK_LOG
+      amount: 32
+  armor:
+    armor1:
+      id: CHAINMAIL_LEGGINGS
+      amount: 1
 
 vip:
   permission: "syntri.kit.vip"
   time: "1d"
   items:
-    - ==: org.bukkit.inventory.ItemStack
-      type: DIAMOND_SWORD
-    - ==: org.bukkit.inventory.ItemStack
-      type: GOLDEN_APPLE
+    item1:
+      id: DIAMOND_SWORD
+      amount: 1
+    item2:
+      id: GOLDEN_APPLE
       amount: 5
-    - ==: org.bukkit.inventory.ItemStack
-      type: DIAMOND_CHESTPLATE
-
-warrior:
-  permission: "syntri.kit.warrior"
-  time: "2sa"
-  items:
-    - ==: org.bukkit.inventory.ItemStack
-      type: IRON_SWORD
-    - ==: org.bukkit.inventory.ItemStack
-      type: COOKED_BEEF
-      amount: 20
+    item3:
+      id: EXP_BOTTLE
+      amount: 32
+  armor:
+    armor1:
+      id: DIAMOND_HELMET
+      amount: 1
+    armor2:
+      id: DIAMOND_CHESTPLATE
+      amount: 1
+    armor3:
+      id: DIAMOND_LEGGINGS
+      amount: 1
+    armor4:
+      id: DIAMOND_BOOTS
+      amount: 1
