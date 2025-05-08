@@ -48,18 +48,23 @@ public final class SyntriPlugin extends JavaPlugin {
     public void onLoad() {
         instance = this;
 
-
-        getLogger().setFilter(new Filter() {
+        System.setProperty("file.encoding", "UTF-8");
+        System.setOut(new java.io.PrintStream(System.out) {
             @Override
-            public boolean isLoggable(LogRecord record) {
-                return record.getLevel().intValue() < java.util.logging.Level.WARNING.intValue();
+            public void println(String x) {
+                if (x != null && x.contains("Default system encoding may have misread config.yml")) return;
+                super.println(x);
             }
         });
+
+        saveDefaultConfig();
     }
+
 
     @Override
     public void onEnable() {
         instance = this;
+
         InventoryLoader loader = new InventoryLoader();
 
         File kitFile = new File(getDataFolder(), "kits.yml");
