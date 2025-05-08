@@ -1,40 +1,24 @@
-name: Java CI with Gradle
+name: Release on Tag
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout código
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-java@v4
+      - name: Criar Release no GitHub
+        uses: softprops/action-gh-release@v1
         with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2 # Versão mais recente
-
-      - name: Grant execute permission for Gradlew
-        run: chmod +x ./gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew build
-
-      - name: Publish release
-        uses: softprops/action-gh-release@v2
-        with:
-          make_latest: true
-          prerelease: false
-          tag_name: "v1.0.${{ github.run_number }}"
-          name: "Release v1.0.${{ github.run_number }}"
-          files: |
-            build/libs/*
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            Essa é a release para a versão `${{ github.ref_name }}`.
+            - Adicione notas detalhadas aqui se quiser.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
