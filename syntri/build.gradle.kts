@@ -25,12 +25,12 @@ repositories {
 
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.md-5.net/content/repositories/snapshots/")
 }
 
 dependencies {
-    compileOnly(files("C:\\Users\\GabrielMartins\\Desktop\\server\\build\\plugins\\place.jar"))
-    compileOnly(files("libs/Vault.jar"))
+    compileOnly("me.clip:placeholderapi:2.11.5")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":version-api"))

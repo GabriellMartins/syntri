@@ -10,13 +10,15 @@ repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     mavenLocal()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.reflections:reflections:0.10.2")
-    compileOnly(files("C:\\Users\\GabrielMartins\\Desktop\\server\\build\\plugins\\place.jar"))
+
+    compileOnly("me.clip:placeholderapi:2.11.5")
 
     implementation(project(":version-api"))
     implementation(project(":version-1_8_9"))
