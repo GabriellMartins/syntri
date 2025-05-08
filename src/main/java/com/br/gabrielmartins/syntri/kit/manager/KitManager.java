@@ -40,10 +40,10 @@ public class KitManager {
         if (!config.isConfigurationSection(path)) return items;
 
         for (String key : config.getConfigurationSection(path).getKeys(false)) {
-            String id = config.getString(path + "." + key + ".id", "STONE");
+            int id = config.getInt(path + "." + key + ".id", 1);
             int amount = config.getInt(path + "." + key + ".amount", 1);
 
-            Material material = Material.matchMaterial(id);
+            Material material = getMaterialById(id);
             if (material != null) {
                 items.add(new ItemStack(material, amount));
             }
@@ -58,27 +58,24 @@ public class KitManager {
         config.set(name + ".permission", permission);
         config.set(name + ".time", time);
 
-        Map<String, Object> itemMap = new HashMap<>();
-        Map<String, Object> armorMap = new HashMap<>();
-
         ItemStack[] contents = player.getInventory().getContents();
         ItemStack[] armor = player.getInventory().getArmorContents();
 
         int index = 0;
         for (ItemStack item : contents) {
             if (item != null && item.getType() != Material.AIR) {
-                String path = "items.item" + index++;
-                config.set(name + "." + path + ".id", item.getType().name());
-                config.set(name + "." + path + ".amount", item.getAmount());
+                String path = name + ".items.item" + index++;
+                config.set(path + ".id", item.getType().getId());
+                config.set(path + ".amount", item.getAmount());
             }
         }
 
         index = 0;
         for (ItemStack item : armor) {
             if (item != null && item.getType() != Material.AIR) {
-                String path = "armor.armor" + index++;
-                config.set(name + "." + path + ".id", item.getType().name());
-                config.set(name + "." + path + ".amount", item.getAmount());
+                String path = name + ".armor.armor" + index++;
+                config.set(path + ".id", item.getType().getId());
+                config.set(path + ".amount", item.getAmount());
             }
         }
 
@@ -88,6 +85,15 @@ public class KitManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static Material getMaterialById(int id) {
+        for (Material material : Material.values()) {
+            if (material != null && material.getId() == id) {
+                return material;
+            }
+        }
+        return null;
     }
 
     private static long parseTimeToMillis(String time) {
