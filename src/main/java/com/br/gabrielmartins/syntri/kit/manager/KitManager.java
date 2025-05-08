@@ -3,12 +3,14 @@ package com.br.gabrielmartins.syntri.kit.manager;
 import com.br.gabrielmartins.syntri.kit.Kit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
+import java.util.Base64;
 
 public class KitManager {
 
@@ -36,19 +38,15 @@ public class KitManager {
 
     private static List<ItemStack> loadItems(YamlConfiguration config, String path) {
         List<ItemStack> items = new ArrayList<>();
-
         if (!config.isConfigurationSection(path)) return items;
 
         for (String key : config.getConfigurationSection(path).getKeys(false)) {
-            int id = config.getInt(path + "." + key + ".id", 1);
-            int amount = config.getInt(path + "." + key + ".amount", 1);
-
-            Material material = getMaterialById(id);
-            if (material != null) {
-                items.add(new ItemStack(material, amount));
+            String base64 = config.getString(path + "." + key + ".data");
+            if (base64 != null) {
+                ItemStack item = deserializeItem(base64);
+                if (item != null) items.add(item);
             }
         }
-
         return items;
     }
 
@@ -65,8 +63,7 @@ public class KitManager {
         for (ItemStack item : contents) {
             if (item != null && item.getType() != Material.AIR) {
                 String path = name + ".items.item" + index++;
-                config.set(path + ".id", item.getType().getId());
-                config.set(path + ".amount", item.getAmount());
+                config.set(path + ".data", serializeItem(item));
             }
         }
 
@@ -74,8 +71,7 @@ public class KitManager {
         for (ItemStack item : armor) {
             if (item != null && item.getType() != Material.AIR) {
                 String path = name + ".armor.armor" + index++;
-                config.set(path + ".id", item.getType().getId());
-                config.set(path + ".amount", item.getAmount());
+                config.set(path + ".data", serializeItem(item));
             }
         }
 
@@ -85,15 +81,6 @@ public class KitManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static Material getMaterialById(int id) {
-        for (Material material : Material.values()) {
-            if (material != null && material.getId() == id) {
-                return material;
-            }
-        }
-        return null;
     }
 
     private static long parseTimeToMillis(String time) {
@@ -125,5 +112,26 @@ public class KitManager {
 
     public static void setCooldown(String kit, UUID player, long duration) {
         cooldowns.computeIfAbsent(kit, k -> new HashMap<>()).put(player, System.currentTimeMillis() + duration);
+    }
+
+    public static String serializeItem(ItemStack item) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
+            dataOutput.writeObject(item);
+            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ItemStack deserializeItem(String base64) {
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(base64));
+             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
+            return (ItemStack) dataInput.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
