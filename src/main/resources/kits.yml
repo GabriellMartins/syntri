@@ -3,20 +3,20 @@ starter:
   time: "10s"
   items:
     item1:
-      id: STONE_SWORD
+      id: 272  # STONE_SWORD
       amount: 1
     item2:
-      id: BREAD
+      id: 297  # BREAD
       amount: 16
     item3:
-      id: TORCH
+      id: 50   # TORCH
       amount: 8
   armor:
     armor1:
-      id: LEATHER_HELMET
+      id: 298  # LEATHER_HELMET
       amount: 1
     armor2:
-      id: LEATHER_CHESTPLATE
+      id: 299  # LEATHER_CHESTPLATE
       amount: 1
 
 builder:
@@ -24,17 +24,17 @@ builder:
   time: "30min"
   items:
     item1:
-      id: IRON_PICKAXE
+      id: 257  # IRON_PICKAXE
       amount: 1
     item2:
-      id: COBBLESTONE
+      id: 4    # COBBLESTONE
       amount: 64
     item3:
-      id: LADDER
+      id: 65   # LADDER
       amount: 16
   armor:
     armor1:
-      id: LEATHER_BOOTS
+      id: 301  # LEATHER_BOOTS
       amount: 1
 
 warrior:
@@ -42,20 +42,20 @@ warrior:
   time: "1d"
   items:
     item1:
-      id: IRON_SWORD
+      id: 267  # IRON_SWORD
       amount: 1
     item2:
-      id: COOKED_BEEF
+      id: 320  # COOKED_BEEF
       amount: 32
     item3:
-      id: SHIELD
+      id: 442  # SHIELD
       amount: 1
   armor:
     armor1:
-      id: IRON_HELMET
+      id: 306  # IRON_HELMET
       amount: 1
     armor2:
-      id: IRON_CHESTPLATE
+      id: 307  # IRON_CHESTPLATE
       amount: 1
 
 archer:
@@ -63,17 +63,17 @@ archer:
   time: "2h"
   items:
     item1:
-      id: BOW
+      id: 261  # BOW
       amount: 1
     item2:
-      id: ARROW
+      id: 262  # ARROW
       amount: 64
     item3:
-      id: OAK_LOG
+      id: 17   # OAK_LOG
       amount: 32
   armor:
     armor1:
-      id: CHAINMAIL_LEGGINGS
+      id: 308  # CHAINMAIL_LEGGINGS
       amount: 1
 
 vip:
@@ -81,24 +81,24 @@ vip:
   time: "1d"
   items:
     item1:
-      id: DIAMOND_SWORD
+      id: 276  # DIAMOND_SWORD
       amount: 1
     item2:
-      id: GOLDEN_APPLE
+      id: 322  # GOLDEN_APPLE
       amount: 5
     item3:
-      id: EXP_BOTTLE
+      id: 384  # EXP_BOTTLE
       amount: 32
   armor:
     armor1:
-      id: DIAMOND_HELMET
+      id: 310  # DIAMOND_HELMET
       amount: 1
     armor2:
-      id: DIAMOND_CHESTPLATE
+      id: 311  # DIAMOND_CHESTPLATE
       amount: 1
     armor3:
-      id: DIAMOND_LEGGINGS
+      id: 312  # DIAMOND_LEGGINGS
       amount: 1
     armor4:
-      id: DIAMOND_BOOTS
+      id: 313  # DIAMOND_BOOTS
       amount: 1
