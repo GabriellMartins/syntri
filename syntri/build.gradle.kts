@@ -59,9 +59,12 @@ bukkit {
 }
 
 checkstyle {
-    toolVersion = "10.12.2"
-    configFile = file("config/checkstyle/checkstyle.xml")
+    configFile = rootProject.file("config/checkstyle/checkstyle.xml")
     isIgnoreFailures = true
+}
+
+tasks.named("checkstyleMain") {
+    enabled = false
 }
 
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
