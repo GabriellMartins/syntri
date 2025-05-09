@@ -47,6 +47,10 @@ public class MongoDataService implements DataService {
         ), doc, new com.mongodb.client.model.ReplaceOptions().upsert(true));
     }
 
+    public void Account(Player player, String account) {
+
+    }
+
     @Override
     public void listHomes(Player player) {
         var docs = getHomes().find(eq("uuid", player.getUniqueId().toString()));

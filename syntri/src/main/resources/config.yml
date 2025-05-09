@@ -89,16 +89,14 @@ motd:
 
 scoreboard:
   enabled: true
-  title: "&e&lSYNTRI"
+  title: "#00ffff&lSyntri Server"
   lines:
-    - "&7&m----------------------"
-    - "&aNick: &f%player_name%"
-    - "&aHealth: &f%syntri_health%"
-    - "&aPing: &f%syntri_ping%ms"
-    - "&aOnline: &f%syntri_online%"
-    - "&aBackend: &f%syntri_backend%"
-    - "&7&m----------------------"
-
+    - "&fJogadores: &a%server_online%"
+    - "&7Ping: &f%player_ping%"
+  animation:
+    enabled: true
+    style: RAINBOW # Opções: RAINBOW, FLAME, OCEAN, CYBER, CHROME, PINK_PURPLE
+    interval_ticks: 10
 
 auto-messages:
   enabled: true
@@ -106,6 +104,7 @@ auto-messages:
   messages:
     prefix: "&8[&b&lSyntri&8]"
     interval: 300 # in seconds
+
     texts:
       - "&aWelcome to &eSyntri&a! Use &e/kit &ato begin your journey."
       - "<click:/discord>&bClick here to join our Discord server!</click>"
@@ -122,6 +121,21 @@ auto-messages:
     fade-in: 10
     stay: 60
     fade-out: 10
+
+
+tablist:
+  enabled: true         # Ativa ou desativa o sistema de tablist
+  refresh_ticks: 60     # Intervalo de atualização (em ticks - 20 ticks = 1 segundo)
+
+  header:
+    - "<gradient:#00ffaa:#0055ff>&lSyntri Network</gradient>"
+    - "&7Bem-vindo, &a%player_name%"
+    - "&7Online: &a%online% &8/&c%max_players%"
+
+  footer:
+    - "&fSeu ping: &e%player_ping%ms"
+    - "&fSite: &bwww.syntri.com"
+    - "&fDiscord: &ddiscord.gg/syntri"
 
 
 # ─────────────────────────────────────────────────────────────────────

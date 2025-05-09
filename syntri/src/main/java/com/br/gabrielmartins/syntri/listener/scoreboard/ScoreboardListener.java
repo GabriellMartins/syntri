@@ -15,16 +15,22 @@ public class ScoreboardListener implements Listener {
     private final ScoreboardManager scoreboard;
 
     public ScoreboardListener() {
-        this.scoreboard = new ScoreboardManager(SyntriPlugin.getInstance().getConfig());
+        this.scoreboard = new ScoreboardManager(
+                SyntriPlugin.getInstance().getConfig(),
+                SyntriPlugin.getInstance()
+        );
 
         Bukkit.getPluginManager().registerEvents(this, SyntriPlugin.getInstance());
+        scoreboard.startTitleAnimation(Bukkit.getOnlinePlayers());
         startAutoUpdate();
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         if (!isScoreboardEnabled()) return;
+
         scoreboard.apply(event.getPlayer());
+        scoreboard.startTitleAnimation(Bukkit.getOnlinePlayers());
     }
 
     @EventHandler

@@ -33,12 +33,22 @@ object Cooldown {
 
                 if (remaining <= 0) {
                     cooldowns.remove(uuid)
-                    sendActionBar(player, "${ChatColor.GREEN}Pronto!")
+                    sendActionBar(
+                        plugin = plugin,
+                        player = player,
+                        durationSeconds = 1,
+                        message = "${ChatColor.GREEN}Pronto!"
+                    )
                     cancel()
                     return
                 }
 
-                sendActionBar(player, "$messagePrefix${ChatColor.WHITE}${remaining}s")
+                sendActionBar(
+                    plugin = plugin,
+                    player = player,
+                    durationSeconds = 1,
+                    message = "$messagePrefix${ChatColor.WHITE}${remaining}s"
+                )
             }
         }.runTaskTimer(plugin, 0L, 20L)
     }
@@ -48,20 +58,29 @@ object Cooldown {
         return end != null && System.currentTimeMillis() < end
     }
 
-    fun sendActionBar(player: Player, message: String) {
-        try {
-            if (majorVersion >= 108) {
-                player.spigot().sendMessage(
-                    ChatMessageType.ACTION_BAR,
-                    TextComponent(message)
-                )
-            } else {
-                player.sendMessage("${ChatColor.GRAY}[Cooldown] $message")
+    fun sendActionBar(
+        plugin: JavaPlugin,
+        player: Player,
+        durationSeconds: Int,
+        message: String,
+        delayTicks: Long = 0L,
+        intervalTicks: Long = 20L
+    ) {
+        object : BukkitRunnable() {
+            var count = 0
+            override fun run() {
+                if (count >= durationSeconds) {
+                    cancel()
+                    return
+                }
+                try {
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(message))
+                } catch (e: Exception) {
+                    player.sendMessage("${ChatColor.RED}[Erro ActionBar] $message")
+                }
+                count++
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            player.sendMessage("${ChatColor.RED}[Erro ActionBar] $message")
-        }
+        }.runTaskTimer(plugin, delayTicks, intervalTicks)
     }
 
     private fun parseVersion(version: String): Int {
@@ -69,6 +88,14 @@ object Cooldown {
             if ("_" in version) version.split("_")[1].toInt() else 999
         } catch (e: Exception) {
             999
+        }
+    }
+
+    fun sendActionBar(player: Player, message: String) {
+        try {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(message))
+        } catch (e: Exception) {
+            player.sendMessage("${ChatColor.RED}[Erro ActionBar] $message")
         }
     }
 }

@@ -58,10 +58,13 @@ public class SyntriPlaceholder extends PlaceholderExpansion {
             case "backend":
                 return SyntriPlugin.getInstance().getBackend() != null
                         ? SyntriPlugin.getInstance().getBackend().getClass().getSimpleName().replace("Backend", "")
-                        : "Desconhecido";
+                        : "Unknown";
 
             case "online":
                 return String.valueOf(Bukkit.getOnlinePlayers().size());
+
+            case "max_players":
+                return String.valueOf(Bukkit.getMaxPlayers());
 
             case "ping":
                 try {
@@ -75,4 +78,5 @@ public class SyntriPlaceholder extends PlaceholderExpansion {
                 return null;
         }
     }
+
 }

@@ -1,6 +1,8 @@
 package com.br.gabrielmartins.syntri;
 
 import com.br.gabrielmartins.engine.api.inventory.loader.InventoryLoader;
+import com.br.gabrielmartins.engine.api.scoreboard.ScoreboardManager;
+import com.br.gabrielmartins.engine.api.tablist.TablistManager;
 import com.br.gabrielmartins.engine.backend.Backend;
 import com.br.gabrielmartins.engine.backend.BackendType;
 import com.br.gabrielmartins.engine.backend.mongo.MongoBackend;
@@ -50,6 +52,7 @@ public final class SyntriPlugin extends JavaPlugin {
     private JarType jarType;
     private Economy economy;
     private TopMoneyCache topMoneyCache;
+    private TablistManager tablistManager;
 
     @Setter
     private LoaderListener listenerLoad;
@@ -58,17 +61,28 @@ public final class SyntriPlugin extends JavaPlugin {
     public void onLoad() {
         instance = this;
         System.setProperty("file.encoding", "UTF-8");
-        reloadConfig();
-        saveDefaultConfig();
-        saveConfig();
+
 
     }
 
     @Override
     public void onEnable() {
+        reloadConfig();
+        saveDefaultConfig();
+        saveConfig();
+        new SyntriPlaceholder().canRegister();
         this.jarType = JarType.getJarType();
         loadConfig();
+        ScoreboardManager scoreboardManager = new ScoreboardManager(getConfig(), this);
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            scoreboardManager.apply(player);
+        }
+        tablistManager = new TablistManager(this, getConfig());
+        tablistManager.start();
+        scoreboardManager.startTitleAnimation(Bukkit.getOnlinePlayers());
         this.messagesManager = new MessagesManager(this);
+
 
         inventoryLoader = new InventoryLoader();
 
@@ -105,7 +119,7 @@ public final class SyntriPlugin extends JavaPlugin {
         new CommandLoader(this).load("com.br.gabrielmartins.syntri.commands");
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new SyntriPlaceholder().canRegister();
+            new SyntriPlaceholder().register();
         }
         startAutoMessages();
     }
@@ -114,6 +128,10 @@ public final class SyntriPlugin extends JavaPlugin {
     public void onDisable() {
         if (backend != null && backend.isConnected()) backend.disconnect();
         if (mongoBackend != null && mongoBackend.isConnected()) mongoBackend.disconnect();
+
+        if (tablistManager != null) {
+            tablistManager.stop();
+        }
     }
 
     private boolean setupVault() {
@@ -257,6 +275,10 @@ public final class SyntriPlugin extends JavaPlugin {
 
     @Override
     public FileConfiguration getConfig() {
+        if (this.configData == null) {
+            this.configData = YamlConfiguration.loadConfiguration(getResourceFile("config.yml"));
+        }
         return this.configData;
     }
+
 }

@@ -13,6 +13,7 @@ public class LoaderListener {
     private final Object pluginInstance;
     private final Object inventoryLoader;
 
+
     public LoaderListener(Object pluginInstance, Object inventoryLoader) {
         this.pluginInstance = pluginInstance;
         this.inventoryLoader = inventoryLoader;

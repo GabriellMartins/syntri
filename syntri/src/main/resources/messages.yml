@@ -190,4 +190,7 @@ spawn2:
   not_set: "&cSpawn is not set yet."
   world_not_found: "&cSpawn world not found."
 
+reload:
+  no_permission: "&cYou don't have permission to do that."
+  success: "&aConfigurations successfully reloaded!"
 

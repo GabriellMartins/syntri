@@ -1,4 +1,8 @@
 package com.br.gabrielmartins.engine;
 
-public final class Commons  {
+
+import org.bukkit.plugin.java.JavaPlugin;
+
+public final class Commons{
+
 }
