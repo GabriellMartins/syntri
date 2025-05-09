@@ -16,7 +16,7 @@ repositories {
 dependencies {
     implementation(project(":version-api"))
 
-    compileOnly("org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.reflections:reflections:0.10.2")
 
