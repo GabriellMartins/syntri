@@ -1,0 +1,194 @@
+eco:
+  no_permission: "&cVocê não tem permissão para usar este comando."
+  usage: "&cUso: /eco <set|add|remove> <player> <amount>"
+  invalid_value: "&cValor inválido."
+  negative_value: "&cO valor não pode ser negativo."
+  vault_disabled: "&cO Vault não está habilitado."
+  set_success: "&aSaldo de &e%player% &aajustado para &2$%amount%"
+  add_success: "&aAdicionado &2$%amount% &aao jogador &e%player%"
+  remove_success: "&aRemovido &2$%amount% &ado jogador &e%player%"
+  invalid_action: "&cAção inválida. Use: set, add, remove"
+
+money:
+  no_permission: "&cVocê não tem permissão para verificar seu saldo."
+  vault_disabled: "&cO Vault não está habilitado."
+  balance_message:
+    - "&8&m------------------------"
+    - "&6&l       ECONOMIA"
+    - ""
+    - "&aVocê tem: &2$%balance%"
+    - "&8&m------------------------"
+
+pay:
+  no_permission: "&cVocê não tem permissão para usar este comando."
+  usage: "&cUso correto: /pay <player> <amount>"
+  player_not_found: "&cJogador não encontrado ou offline."
+  self_payment: "&cVocê não pode pagar a si mesmo."
+  invalid_value: "&cValor inválido."
+  must_be_positive: "&cVocê deve enviar um valor positivo."
+  vault_disabled: "&cO Vault não está habilitado."
+  insufficient_balance: "&cVocê não tem dinheiro suficiente."
+  sent: "&aVocê enviou &2$%amount% &apara &e%target%&a."
+  received: "&aVocê recebeu &2$%amount% &ade &e%sender%&a."
+
+topmoney:
+  no_permission: "&cVocê não tem permissão para usar este comando."
+  header: "&8&m-----------------------------\n&6&l       TOP MONEY (global)\n"
+  empty: "&cRanking indisponível."
+  entry: "&e%position%º &f%player% &7- &2$%balance%"
+  footer: "&8&m-----------------------------"
+
+
+chat:
+  no_permission: "&cVocê não tem permissão para usar este comando."
+  usage:
+    - "&8&m-------------------------"
+    - "&b&lChat Global"
+    - ""
+    - "&f/chat on &7- Ativar chat"
+    - "&f/chat off &7- Desativar chat"
+    - "&f/chat clear &7- Limpar chat"
+    - "&8&m-------------------------"
+  enabled_title: "&a&lChat ativado!"
+  disabled_title: "&c&lChat desativado!"
+  enabled_by: "&fO chat foi ativado por &e%player%"
+  disabled_by: "&fO chat foi desativado por &e%player%"
+  actionbar_enabled: "&a✔ Chat ativado"
+  actionbar_disabled: "&c✖ Chat desativado"
+  cleared_by: "&fO chat foi limpo por &a%player%"
+  invalid_command: "&cComando inválido. Use /chat on, /chat off ou /chat clear."
+
+createkit:
+  only_players: "&cApenas jogadores podem usar este comando."
+  usage: "&cUso correto: /createkit <name> <permission> <cooldown>"
+  success: "&aKit &e%kit% &acriado com a permissão &e%permission% &ae cooldown de &e%cooldown%&a."
+
+debug:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission: "&cVocê não tem permissão para usar este comando."
+  header: "&8&m--------------------------------------------------"
+  title: "&e[&6Syntri Debug&e]"
+  tps: "&fTPS: &a%tps%"
+  memory: "&fMemória: &a%memory%"
+  players: "&fJogadores: &a%online%&7/&f%max%"
+  version: "&fServidor: &7%version%"
+  mode: "&fModo: &7%mode%"
+  footer: "&8&m--------------------------------------------------"
+
+
+gamemode:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission: "&cVocê não tem permissão para mudar seu modo de jogo."
+  usage:
+    - "&eUso: /gm <0, 1, 2 ou 3>"
+    - "&70: Aventura, 1: Criativo, 2: Sobrevivência, 3: Espectador"
+  adventure: "&aModo de jogo alterado para &eAVENTURA."
+  creative: "&aModo de jogo alterado para &eCRIATIVO."
+  survival: "&aModo de jogo alterado para &eSOBREVIVÊNCIA."
+  spectator: "&aModo de jogo alterado para &eESPECTADOR."
+  invalid_mode: "&cModo inválido. Use 0, 1, 2 ou 3."
+  invalid_number: "&cVocê deve inserir um número válido (0, 1, 2 ou 3)."
+
+god:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission: "&cVocê não tem permissão para usar este comando."
+  enabled: "&eModo deus &aativado&e!"
+  disabled: "&eModo deus &cdesativado&e!"
+  actionbar_enabled: "&aModo Deus ATIVADO!"
+  actionbar_disabled: "&cModo Deus DESATIVADO!"
+
+home:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission: "&cVocê não tem permissão para usar este comando."
+
+kit:
+  only_players: "&cApenas jogadores podem usar este comando."
+  available_title: "&8&m-----------------------------\n&e&lKITS DISPONÍVEIS"
+  available_format: "&a➤ &f%kit%"
+  available_footer: "&7Use &e/kit <nome> &7para receber um kit.\n&8&m-----------------------------"
+  not_found: "&cKit não encontrado."
+  no_permission: "&cVocê não tem permissão para usar este kit."
+  on_cooldown: "&cVocê deve esperar &e%time% &cpara usar este kit novamente."
+  received: "&aVocê recebeu o kit &e%kit%&a!"
+
+
+loan:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission: "&cVocê não tem permissão para usar este comando."
+
+ping:
+  only_players: "&cApenas jogadores podem usar este comando."
+  header: "&8&m-------------------------\n&b&l      SYNTRI PING\n"
+  value: "&fSeu ping: %color%%ping%ms"
+  status: "&fStatus: %status%"
+  footer: "&8&m-------------------------"
+  status_levels:
+    good: "&a&lPing Estável"
+    medium: "&e&lPing Instável"
+    bad: "&c&lPing Ruim"
+
+sethome:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission: "&cVocê não tem permissão para usar este comando."
+  no_name: "&cPor favor, forneça um nome para sua home."
+  success: "&aVocê definiu sua home com o nome: &e%home%"
+
+setwarp:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission: "&cVocê não tem permissão para usar este comando."
+  usage: "&cUso: /setwarp <name>"
+  success: "&aWarp '&e%warp%&a' salva com sucesso."
+
+spawn:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission_set: "&cVocê não tem permissão para definir o spawn."
+  no_permission_teleport: "&cVocê não tem permissão para se teleportar ao spawn."
+  set_success: "&aPonto de spawn definido com sucesso."
+
+version:
+  no_permission: "&cVocê não tem permissão para ver a versão do plugin."
+  display: "&6Syntri &fv%version% &7- O essencial para o seu servidor."
+
+teleport:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission: "&cVocê não tem permissão para usar este comando."
+  usage_tp: "&cUso: /tp <player>"
+  usage_tpa: "&cUso: /tpa <player> | aceitar | recusar"
+  player_not_found: "&cJogador não encontrado."
+  teleported: "&aVocê foi teleportado para &e%target%&a."
+  teleported_to_you: "&eVocê foi teleportado para &6%player%."
+  all_teleported: "&aTodos os jogadores foram teleportados até você."
+  cannot_self_request: "&cVocê não pode enviar uma solicitação de teleporte para si mesmo."
+  in_combat: "&cVocê está em combate! Aguarde para enviar solicitações de teleporte."
+  cooldown: "&cAguarde antes de enviar outra solicitação de teleporte."
+  request_sent: "&aSolicitação de teleporte enviada para &e%target%&a."
+  request_expired: "&cSua solicitação de teleporte para &e%target% &cexpirou."
+  no_request: "&cVocê não tem nenhuma solicitação de teleporte pendente."
+  accepted: "&aVocê aceitou a solicitação de teleporte de &e%player%&a."
+  denied: "&cVocê recusou a solicitação de teleporte."
+  accepted_by_target: "&aSua solicitação de teleporte foi aceita."
+  denied_by_target: "&cSua solicitação de teleporte foi recusada."
+  tpa_message: "&e%player% quer se teleportar até você. "
+  tpa_accept: "§a§l[ACEITAR]"
+  tpa_deny: " §c§l[RECUSAR]"
+
+warp:
+  only_players: "&cApenas jogadores podem usar este comando."
+  no_permission: "&cVocê não tem permissão para usar este comando."
+
+
+home2:
+  teleport_success: "&aVocê foi teleportado para a home &e%home%&a."
+  not_found: "&cVocê não tem uma home chamada &e%home%&c."
+  world_not_found: "&cO mundo desta home não foi encontrado."
+
+warp2:
+  teleport_success: "&aVocê foi teleportado para a warp &e%warp%&a."
+  not_found: "&cVocê não tem uma warp chamada &e%warp%&c."
+  world_not_found: "&cO mundo desta warp não foi encontrado."
+
+spawn2:
+  teleport_success: "&aVocê foi teleportado para o spawn."
+  not_set: "&cO spawn ainda não foi definido."
+  world_not_found: "&cO mundo do spawn não foi encontrado."
+
