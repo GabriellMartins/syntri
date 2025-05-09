@@ -74,7 +74,7 @@ tasks.named("checkstyleMain") {
 
 tasks {
     build {
-        dependsOn(shadowJar)git add .
+        dependsOn(shadowJar)
     }
 
     withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
