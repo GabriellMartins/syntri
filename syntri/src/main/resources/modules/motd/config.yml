@@ -1,0 +1,8 @@
+motd:
+  enabled: true
+  messages:
+    - "&eWelcome!"
+    - "&aCheck out our events!"
+    - "&bHave fun playing!"
+  interval: 1                     # Time in seconds between MOTD message changes
+  animation: true                # Enables animated MOTD (cycling messages)

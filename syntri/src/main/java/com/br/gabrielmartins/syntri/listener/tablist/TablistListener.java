@@ -1,6 +1,6 @@
 package com.br.gabrielmartins.syntri.listener.tablist;
 
-import com.br.gabrielmartins.engine.api.tablist.TablistManager;
+import com.br.gabrielmartins.syntri.tablist.TablistManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

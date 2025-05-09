@@ -26,14 +26,7 @@ public class KitManager {
         if (!file.exists()) {
             try {
                 file.getParentFile().mkdirs();
-
-                InputStream defaultStream = KitManager.class.getClassLoader().getResourceAsStream("kits.yml");
-                if (defaultStream != null) {
-                    Files.copy(defaultStream, file.toPath());
-                } else {
-                    file.createNewFile();
-                }
-
+                file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }

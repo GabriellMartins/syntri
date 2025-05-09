@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":version-1_8_9"))
     implementation(project(":version-1_20_4"))
     implementation(project(":syntri-engine"))
+    implementation("org.reflections:reflections:0.10.2")
 
     api("org.mongodb:mongodb-driver-sync:4.11.0")
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
@@ -80,6 +81,13 @@ tasks {
     withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
         archiveClassifier.set("")
         destinationDirectory.set(file("$buildDir/libs"))
+    }
+}
+
+tasks.processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from("src/main/resources") {
+        include("modules/**")
     }
 }
 

@@ -17,9 +17,6 @@ backend:
 # 🔧 General Server Settings
 # ─────────────────────────────────────────────────────────────────────
 
-general:
-  language: "us"                  # Language used in messages and interface
-
   welcome-message:
     enabled: true                 # Whether the welcome message is enabled
     text: "&aName: %syntri_name% | Health: %syntri_health% | World: %syntri_world% | Ping: %syntri_ping% | Online: %syntri_online% | Backend: %syntri_backend%"
@@ -70,34 +67,6 @@ prevent-hanging-place: false       # Prevents placing paintings, item frames, et
 prevent-hanging-break: false       # Prevents breaking paintings, item frames, etc.
 prevent-world-unload: false        # Prevents world from unloading from memory
 
-# ─────────────────────────────────────────────────────────────────────
-# 🔧 MOTD (Message of the Day) Configuration
-# ─────────────────────────────────────────────────────────────────────
-
-motd:
-  enabled: true
-  messages:
-    - "&eWelcome!"
-    - "&aCheck out our events!"
-    - "&bHave fun playing!"
-  interval: 1                     # Time in seconds between MOTD message changes
-  animation: true                # Enables animated MOTD (cycling messages)
-
-# ─────────────────────────────────────────────────────────────────────
-# 📊 Scoreboard Configuration
-# ─────────────────────────────────────────────────────────────────────
-
-scoreboard:
-  enabled: true
-  title: "#00ffff&lSyntri Server"
-  lines:
-    - "&fJogadores: &a%server_online%"
-    - "&7Ping: &f%player_ping%"
-  animation:
-    enabled: true
-    style: RAINBOW # Opções: RAINBOW, FLAME, OCEAN, CYBER, CHROME, PINK_PURPLE
-    interval_ticks: 10
-
 auto-messages:
   enabled: true
 
@@ -121,54 +90,3 @@ auto-messages:
     fade-in: 10
     stay: 60
     fade-out: 10
-
-
-tablist:
-  enabled: true         # Ativa ou desativa o sistema de tablist
-  refresh_ticks: 60     # Intervalo de atualização (em ticks - 20 ticks = 1 segundo)
-
-  header:
-    - "<gradient:#00ffaa:#0055ff>&lSyntri Network</gradient>"
-    - "&7Bem-vindo, &a%player_name%"
-    - "&7Online: &a%online% &8/&c%max_players%"
-
-  footer:
-    - "&fSeu ping: &e%player_ping%ms"
-    - "&fSite: &bwww.syntri.com"
-    - "&fDiscord: &ddiscord.gg/syntri"
-
-
-# ─────────────────────────────────────────────────────────────────────
-# 💰 Syntri Integrated Economy System (Vault Support)
-# ─────────────────────────────────────────────────────────────────────
-#
-# When `enabled: true`:
-#   ➤ Syntri registers its internal system with Vault as a valid Economy.
-#   ➤ Commands like /money, /pay, /eco, /topmoney will work.
-#   ➤ Player balances are stored in the configured database.
-#
-# When `enabled: false`:
-#   ➤ Syntri does NOT register an economy system.
-#   ➤ You must use another plugin that supports Vault Economy (e.g., EssentialsX).
-#   ➤ Economy commands will be disabled or throw errors.
-
-# ✅ Pros of enabling:
-#   - Fully integrated with Syntri
-#   - No need for external economy plugins
-#   - Compatible with other plugins via Vault
-
-# ❌ Cons of enabling:
-#   - Slightly higher memory and database usage
-
-# ✅ Pros of disabling:
-#   - Lets you use another Vault economy plugin
-#   - Reduces resource usage a bit
-
-# ❌ Cons of disabling:
-#   - Requires another plugin for economy support
-#   - Syntri economy commands won’t work
-
-economy:
-  enabled: true
-
-

@@ -1,27 +1,32 @@
 package com.br.gabrielmartins.syntri.listener.server;
 
-import com.br.gabrielmartins.syntri.SyntriPlugin;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 
+import java.util.List;
+
 public class MotdListener implements Listener {
 
-    private final SyntriPlugin plugin = SyntriPlugin.getInstance();
+    private final FileConfiguration config;
     private int currentMessageIndex = 0;
+
+    public MotdListener(FileConfiguration config) {
+        this.config = config;
+    }
 
     @EventHandler
     public void onServerPing(ServerListPingEvent event) {
-        if (plugin.getConfig().getBoolean("motd.enabled", true)) {
-            if (plugin.getConfig().getStringList("motd.messages").isEmpty()) {
-                return;
-            }
+        if (!config.getBoolean("motd.enabled", true)) return;
 
-            String motd = plugin.getConfig().getStringList("motd.messages").get(currentMessageIndex);
-            motd = ChatColor.translateAlternateColorCodes('&', motd);
-            event.setMotd(motd);
-            currentMessageIndex = (currentMessageIndex + 1) % plugin.getConfig().getStringList("motd.messages").size();
-        }
+        List<String> messages = config.getStringList("motd.messages");
+        if (messages.isEmpty()) return;
+
+        String motd = ChatColor.translateAlternateColorCodes('&', messages.get(currentMessageIndex));
+        event.setMotd(motd);
+
+        currentMessageIndex = (currentMessageIndex + 1) % messages.size();
     }
 }

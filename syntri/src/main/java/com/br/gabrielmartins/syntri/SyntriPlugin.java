@@ -1,8 +1,7 @@
 package com.br.gabrielmartins.syntri;
 
 import com.br.gabrielmartins.engine.api.inventory.loader.InventoryLoader;
-import com.br.gabrielmartins.engine.api.scoreboard.ScoreboardManager;
-import com.br.gabrielmartins.engine.api.tablist.TablistManager;
+
 import com.br.gabrielmartins.engine.backend.Backend;
 import com.br.gabrielmartins.engine.backend.BackendType;
 import com.br.gabrielmartins.engine.backend.mongo.MongoBackend;
@@ -13,20 +12,23 @@ import com.br.gabrielmartins.engine.data.service.sql.SQLDataService;
 import com.br.gabrielmartins.engine.loader.command.CommandLoader;
 import com.br.gabrielmartins.engine.loader.listener.LoaderListener;
 import com.br.gabrielmartins.syntri.cache.TopMoneyCache;
-import com.br.gabrielmartins.syntri.enums.JarType;
 import com.br.gabrielmartins.syntri.kit.manager.KitManager;
-import com.br.gabrielmartins.syntri.listener.scoreboard.ScoreboardListener;
+import com.br.gabrielmartins.syntri.modulo.list.kits.KitModule;
+import com.br.gabrielmartins.syntri.modules.MotdModule;
+import com.br.gabrielmartins.syntri.modulo.list.scoreboard.ScoreboardModule;
+import com.br.gabrielmartins.syntri.modulo.ModuleLoader;
+import com.br.gabrielmartins.syntri.modulo.list.tablist.TablistModule;
+import com.br.gabrielmartins.syntri.modulo.loader.ModuleAutoLoader;
+import com.br.gabrielmartins.syntri.tablist.TablistManager;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -43,16 +45,18 @@ public final class SyntriPlugin extends JavaPlugin {
     @Getter
     private static SyntriPlugin instance;
 
-    @Getter @Setter private MessagesManager messagesManager;
+    @Getter
+    @Setter
+    private MessagesManager messagesManager;
 
     private Backend backend;
     private MongoBackend mongoBackend;
     private static InventoryLoader inventoryLoader;
     private FileConfiguration configData;
-    private JarType jarType;
     private Economy economy;
     private TopMoneyCache topMoneyCache;
     private TablistManager tablistManager;
+    private ModuleLoader loadModules;
 
     @Setter
     private LoaderListener listenerLoad;
@@ -67,62 +71,57 @@ public final class SyntriPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
+
         reloadConfig();
         saveDefaultConfig();
         saveConfig();
-        new SyntriPlaceholder().canRegister();
-        this.jarType = JarType.getJarType();
-        loadConfig();
-        ScoreboardManager scoreboardManager = new ScoreboardManager(getConfig(), this);
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            scoreboardManager.apply(player);
+        this.loadModules = new ModuleLoader(getDataFolder(), this);
+        loadModules.loadModules();
+
+        registerModules();
+
+        ModuleAutoLoader.loadAll(loadModules, this);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new SyntriPlaceholder().register();
+        } else {
+            new SyntriPlaceholder().canRegister();
         }
-        tablistManager = new TablistManager(this, getConfig());
-        tablistManager.start();
-        scoreboardManager.startTitleAnimation(Bukkit.getOnlinePlayers());
-        this.messagesManager = new MessagesManager(this);
 
+        loadConfig();
+
+        this.messagesManager = new MessagesManager(this);
 
         inventoryLoader = new InventoryLoader();
 
-        if (getConfig().getBoolean("economy.enabled", true)) {
-            getServer().getServicesManager().register(
-                    Economy.class,
-                    new com.br.gabrielmartins.syntri.economy.impl.SyntriEconomyImpl() {
-                        @Override public boolean has(String s, double v) {return false;}
-                        @Override public boolean has(String s, String s1, double v) {return false;}
-                        @Override public EconomyResponse withdrawPlayer(String s, String s1, double v) {return null;}
-                        @Override public EconomyResponse depositPlayer(String s, String s1, double v) {return null;}
-                        @Override public EconomyResponse createBank(String s, String s1) {return null;}
-                        @Override public EconomyResponse deleteBank(String s) {return null;}
-                        @Override public boolean createPlayerAccount(String s) {return false;}
-                        @Override public boolean createPlayerAccount(String s, String s1) {return false;}}, this, ServicePriority.Highest
-            );
-            setupVault();
-        } else {
-            broadcastToOps("Economy system disabled via config.yml (economy.enabled = false)");
-        }
+        setupVault();
 
         topMoneyCache = new TopMoneyCache();
         topMoneyCache.startUpdater();
 
-        com.br.gabrielmartins.syntri.kit.manager.KitManager.loadKits(getResourceFile("kits.yml"));
-        new ScoreboardListener();
+        File kitFile = new File(Bukkit.getPluginManager().getPlugin("Syntri").getDataFolder(), "modules/kits/config.yml");
+
+        if (!kitFile.exists()) {
+            Bukkit.getPluginManager().getPlugin("Syntri").saveResource("modules/kits/config.yml", false);
+        }
+
+
+        KitManager.loadKits(kitFile);
 
         listenerLoad = new LoaderListener(this, inventoryLoader);
         listenerLoad.listener("com.br.gabrielmartins.syntri.listener");
 
         initBackend();
+
         DataHandler.createTables();
 
         new CommandLoader(this).load("com.br.gabrielmartins.syntri.commands");
 
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new SyntriPlaceholder().register();
-        }
         startAutoMessages();
     }
+
 
     @Override
     public void onDisable() {
@@ -160,6 +159,14 @@ public final class SyntriPlugin extends JavaPlugin {
         Bukkit.getOnlinePlayers().stream()
                 .filter(Player::isOp)
                 .forEach(p -> p.sendMessage("§c[Syntri] " + message));
+    }
+
+    private void registerModules() {
+        new ScoreboardModule(loadModules, this).register();
+        new TablistModule(loadModules, this).register();
+        new MotdModule(loadModules, this).register();
+        new KitModule(loadModules, this).register();
+
     }
 
     private void loadConfig() {
