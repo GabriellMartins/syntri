@@ -34,6 +34,6 @@ jobs:
           name: Release ${{ github.ref_name }}
           body: |
             Essa é a release para a versão `${{ github.ref_name }}`.
-          files: build/libs/*.jar
+          files: syntri/build/libs/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
