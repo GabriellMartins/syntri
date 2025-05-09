@@ -1,77 +1,80 @@
-package com.br.gabrielmartins.engine.api.translate;
-
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-
-public class Translate {
-
-    private static final Map<String, YamlConfiguration> translations = new HashMap<>();
-    private static String currentLanguage = "br";
-
-    public static void load() {
-        String[] languages = {"br", "us", "uk", "japao", "china", "hungria"};
-
-        File langsFolder = new File("plugins/Syntri/langs");
-        if (!langsFolder.exists()) {
-            langsFolder.mkdirs();
-        }
-
-        for (String lang : languages) {
-            File langFile = new File(langsFolder, lang + ".yml");
-
-            if (!langFile.exists()) {
-                createDefaultTranslationFile(langFile, lang);
-            }
-
-            try (Reader reader = new InputStreamReader(langFile.toURI().toURL().openStream(), StandardCharsets.UTF_8)) {
-                YamlConfiguration config = YamlConfiguration.loadConfiguration(reader);
-                translations.put(lang.toLowerCase(), config);
-                System.out.println("[Syntri] Tradução carregada: " + lang);
-            } catch (Exception e) {
-                System.err.println("[Syntri] Erro ao carregar tradução: " + lang);
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private static void createDefaultTranslationFile(File file, String lang) {
-        try (InputStream inputStream = Translate.class.getClassLoader().getResourceAsStream("langs/" + lang + ".yml")) {
-            if (inputStream == null) {
-                System.err.println("[Syntri] Arquivo de tradução não encontrado no JAR para: " + lang);
-                return;
-            }
-
-            try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
-                int read;
-                while ((read = inputStream.read()) != -1) {
-                    writer.write(read);
-                }
-            }
-
-            System.out.println("[Syntri] Arquivo de tradução copiado para o servidor: " + lang);
-        } catch (Exception e) {
-            System.err.println("[Syntri] Erro ao copiar arquivo de tradução para: " + lang);
-            e.printStackTrace();
-        }
-    }
-
-
-    public static String get(String key) {
-        return get(key, currentLanguage);
-    }
-
-    public static String get(String key, String lang) {
-        YamlConfiguration config = translations.getOrDefault(lang.toLowerCase(), null);
-        if (config == null) return key;
-
-        return config.getString(key, key);
-    }
-
-    public static void setLanguage(String lang) {
-        currentLanguage = lang;
-    }
-}
+//package com.br.gabrielmartins.engine.api.translate;
+//
+//import org.bukkit.configuration.file.YamlConfiguration;
+//
+//import java.io.*;
+//import java.net.URL;
+//import java.nio.charset.StandardCharsets;
+//import java.util.HashMap;
+//import java.util.Map;
+//
+//public class Translate {
+//
+//    private static final Map<String, YamlConfiguration> translations = new HashMap<>();
+//    private static String currentLanguage = "br";
+//    private static final String[] SUPPORTED_LANGUAGES = {
+//
+//            "br",
+//            "en_us",
+//            "en_uk",
+//            "ja",
+//            "zh",
+//            "hu"
+//
+//    };
+//    private static final File LANGS_FOLDER = new File("plugins/Syntri/langs");
+//
+//    public static void load() {
+//        if (!LANGS_FOLDER.exists()) LANGS_FOLDER.mkdirs();
+//
+//        for (String lang : SUPPORTED_LANGUAGES) {
+//            File langFile = new File(LANGS_FOLDER, lang + ".yml");
+//
+//            if (!langFile.exists()) copyDefaultLangFile(langFile, lang);
+//
+//            YamlConfiguration config = loadYamlSafely(langFile);
+//            if (config != null) {
+//                translations.put(lang.toLowerCase(), config);
+//            }
+//        }
+//    }
+//
+//    private static void copyDefaultLangFile(File file, String lang) {
+//        try (InputStream input = Translate.class.getClassLoader().getResourceAsStream("langs/" + lang + ".yml")) {
+//            if (input == null) return;
+//
+//            try (OutputStream output = new FileOutputStream(file)) {
+//                byte[] buffer = new byte[1024];
+//                int bytesRead;
+//                while ((bytesRead = input.read(buffer)) != -1) {
+//                    output.write(buffer, 0, bytesRead);
+//                }
+//            }
+//        } catch (IOException ignored) {}
+//    }
+//
+//    private static YamlConfiguration loadYamlSafely(File file) {
+//        try {
+//            URL url = file.toURI().toURL();
+//            try (InputStream input = url.openStream();
+//                 InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+//                return YamlConfiguration.loadConfiguration(reader);
+//            }
+//        } catch (IOException ignored) {}
+//        return null;
+//    }
+//
+//    public static String get(String key) {
+//        return get(key, currentLanguage);
+//    }
+//
+//    public static String get(String key, String lang) {
+//        YamlConfiguration config = translations.get(lang.toLowerCase());
+//        if (config == null) config = translations.get("br");
+//        return config != null ? config.getString(key, key) : key;
+//    }
+//
+//    public static void setLanguage(String lang) {
+//        currentLanguage = lang;
+//    }
+//}

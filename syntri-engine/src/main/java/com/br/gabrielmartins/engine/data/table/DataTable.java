@@ -1,6 +1,5 @@
 package com.br.gabrielmartins.engine.data.table;
 
-import com.br.gabrielmartins.engine.api.translate.Translate;
 import com.br.gabrielmartins.engine.backend.Backend;
 import com.br.gabrielmartins.engine.backend.sqllite.SQLiteBackend;
 import org.bukkit.Bukkit;
@@ -13,13 +12,16 @@ public enum DataTable {
 
     SPAWN("spawn",
             "CREATE TABLE IF NOT EXISTS spawn (id INT PRIMARY KEY, world VARCHAR(255), x DOUBLE, y DOUBLE, z DOUBLE);",
-            "INSERT INTO spawn (id, world, x, y, z) VALUES (1, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET world = excluded.world, x = excluded.x, y = excluded.y, z = excluded.z"),
+            "INSERT INTO spawn (id, world, x, y, z) VALUES (1, ?, ?, ?, ?)"),
 
     HOME("homes",
             "CREATE TABLE IF NOT EXISTS homes (uuid VARCHAR(36) NOT NULL, home_name VARCHAR(255) NOT NULL, world VARCHAR(255) NOT NULL, x DOUBLE NOT NULL, y DOUBLE NOT NULL, z DOUBLE NOT NULL, PRIMARY KEY (uuid, home_name));",
             null,
             "SELECT home_name FROM homes WHERE uuid = ?",
             "SELECT world, x, y, z FROM homes WHERE uuid = ? AND home_name = ?"),
+
+    ECONOMY("economy",
+            "CREATE TABLE IF NOT EXISTS economy (uuid VARCHAR(36) PRIMARY KEY, balance DOUBLE NOT NULL DEFAULT 0.0);"),
 
     WARP("warps",
             "CREATE TABLE IF NOT EXISTS warps (uuid VARCHAR(36) NOT NULL, warp_name VARCHAR(255) NOT NULL, world VARCHAR(255) NOT NULL, x DOUBLE NOT NULL, y DOUBLE NOT NULL, z DOUBLE NOT NULL, PRIMARY KEY (uuid, warp_name));",
@@ -31,6 +33,13 @@ public enum DataTable {
     private final String createTableSQL;
     private final String listSQL;
     private final String selectSQL;
+
+    DataTable(String tableName, String createTableSQL) {
+        this.tableName = tableName;
+        this.createTableSQL = createTableSQL;
+        this.listSQL = null;
+        this.selectSQL = null;
+    }
 
     DataTable(String tableName, String createTableSQL, String insertSQL) {
         this.tableName = tableName;
@@ -45,7 +54,6 @@ public enum DataTable {
         this.listSQL = listSQL;
         this.selectSQL = selectSQL;
     }
-
     public String getTableName() {
         return tableName;
     }
@@ -205,10 +213,10 @@ public enum DataTable {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                player.sendMessage(Translate.get("§a§lSuas casas:"));
+                player.sendMessage("§a§lSuas casas:");
                 do {
                     String homeName = rs.getString("home_name");
-                    player.sendMessage(Translate.get("§e - " + homeName));
+                    player.sendMessage("§e - " + homeName);
                 } while (rs.next());
             } else {
                 player.sendMessage("§cVocê não tem casas salvas.");
@@ -230,10 +238,10 @@ public enum DataTable {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                player.sendMessage(Translate.get("§a§lSuas warps:"));
+                player.sendMessage("§a§lSuas warps:");
                 do {
                     String warpName = rs.getString("warp_name");
-                    player.sendMessage(Translate.get("§e - " + warpName));
+                    player.sendMessage("§e - " + warpName);
                 } while (rs.next());
             } else {
                 player.sendMessage("§cVocê não tem warps salvas.");

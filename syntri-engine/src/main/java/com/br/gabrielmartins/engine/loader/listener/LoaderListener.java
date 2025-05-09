@@ -19,15 +19,8 @@ public class LoaderListener {
     }
 
     public LoaderListener listener(String basePackage) {
-        System.out.println("Escaneando pacote: " + basePackage);
-
         Reflections reflections = new Reflections(basePackage);
         Set<Class<? extends Listener>> listenerClasses = reflections.getSubTypesOf(Listener.class);
-
-        if (listenerClasses.isEmpty()) {
-            System.out.println("Nenhum Listener encontrado no pacote: " + basePackage);
-            return this;
-        }
 
         for (Class<? extends Listener> clazz : listenerClasses) {
             if (Modifier.isAbstract(clazz.getModifiers())) continue;
@@ -50,12 +43,8 @@ public class LoaderListener {
                 }
 
                 Bukkit.getPluginManager().registerEvents(listenerInstance, (org.bukkit.plugin.Plugin) pluginInstance);
-                System.out.println("Listener carregado: " + clazz.getSimpleName());
 
-            } catch (Exception e) {
-                System.out.println("Erro ao carregar listener: " + clazz.getName());
-                e.printStackTrace();
-            }
+            } catch (Exception ignored) {}
         }
 
         return this;

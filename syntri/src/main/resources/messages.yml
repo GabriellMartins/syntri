@@ -1,0 +1,193 @@
+eco:
+  no_permission: "&cYou don't have permission to use this command."
+  usage: "&cUsage: /eco <set|add|remove> <player> <amount>"
+  invalid_value: "&cInvalid value."
+  negative_value: "&cAmount cannot be negative."
+  vault_disabled: "&cVault is not enabled."
+  set_success: "&aBalance of &e%player% &aadjusted to &2$%amount%"
+  add_success: "&aAdded &2$%amount% &ato player &e%player%"
+  remove_success: "&aRemoved &2$%amount% &afrom player &e%player%"
+  invalid_action: "&cInvalid action. Use: set, add, remove"
+
+money:
+  no_permission: "&cYou don't have permission to check your balance."
+  vault_disabled: "&cVault is not enabled."
+  balance_message:
+    - "&8&m------------------------"
+    - "&6&l       ECONOMY"
+    - ""
+    - "&aYou have: &2$%balance%"
+    - "&8&m------------------------"
+
+pay:
+  no_permission: "&cYou don't have permission to use this command."
+  usage: "&cCorrect usage: /pay <player> <amount>"
+  player_not_found: "&cPlayer not found or offline."
+  self_payment: "&cYou cannot pay yourself."
+  invalid_value: "&cInvalid value."
+  must_be_positive: "&cYou must send a positive amount."
+  vault_disabled: "&cVault is not enabled."
+  insufficient_balance: "&cYou don't have enough money."
+  sent: "&aYou sent &2$%amount% &ato &e%target%&a."
+  received: "&aYou received &2$%amount% &afrom &e%sender%&a."
+
+topmoney:
+  no_permission: "&cYou don't have permission to use this command."
+  header: "&8&m-----------------------------\n&6&l       TOP MONEY (global)\n"
+  empty: "&cRanking unavailable."
+  entry: "&e%position%º &f%player% &7- &2$%balance%"
+  footer: "&8&m-----------------------------"
+
+chat:
+  no_permission: "&cYou don't have permission to use this command."
+  usage:
+    - "&8&m-------------------------"
+    - "&b&lChat Global"
+    - ""
+    - "&f/chat on &7- Enable chat"
+    - "&f/chat off &7- Disable chat"
+    - "&f/chat clear &7- Clear chat"
+    - "&8&m-------------------------"
+  enabled_title: "&a&lChat enabled!"
+  disabled_title: "&c&lChat disabled!"
+  enabled_by: "&fChat was enabled by &e%player%"
+  disabled_by: "&fChat was disabled by &e%player%"
+  actionbar_enabled: "&a✔ Chat enabled"
+  actionbar_disabled: "&c✖ Chat disabled"
+  cleared_by: "&fChat was cleared by &a%player%"
+  invalid_command: "&cInvalid command. Use /chat on, /chat off or /chat clear."
+
+
+createkit:
+  only_players: "&cOnly players can use this command."
+  usage: "&cCorrect usage: /createkit <name> <permission> <cooldown>"
+  success: "&aKit &e%kit% &acreated with permission &e%permission% &aand cooldown &e%cooldown%&a."
+
+debug:
+  only_players: "&cOnly players can use this command."
+  no_permission: "&cYou don't have permission to use this command."
+  header: "&8&m--------------------------------------------------"
+  title: "&e[&6Syntri Debug&e]"
+  tps: "&fTPS: &a%tps%"
+  memory: "&fMemory: &a%memory%"
+  players: "&fPlayers: &a%online%&7/&f%max%"
+  version: "&fServer: &7%version%"
+  mode: "&fMode: &7%mode%"
+  footer: "&8&m--------------------------------------------------"
+
+gamemode:
+  only_players: "&cOnly players can use this command."
+  no_permission: "&cYou don't have permission to change your gamemode."
+  usage:
+    - "&eUse: /gm <0, 1, 2 or 3>"
+    - "&70: Adventure, 1: Creative, 2: Survival, 3: Spectator"
+  adventure: "&aGamemode changed to &eADVENTURE."
+  creative: "&aGamemode changed to &eCREATIVE."
+  survival: "&aGamemode changed to &eSURVIVAL."
+  spectator: "&aGamemode changed to &eSPECTATOR."
+  invalid_mode: "&cInvalid mode. Use 0, 1, 2 or 3."
+  invalid_number: "&cYou must enter a valid number (0, 1, 2 or 3)."
+
+god:
+  only_players: "&cOnly players can use this command."
+  no_permission: "&cYou don't have permission to use this command."
+  enabled: "&eGod mode &aenabled&e!"
+  disabled: "&eGod mode &cdisabled&e!"
+  actionbar_enabled: "&aGod Mode ENABLED!"
+  actionbar_disabled: "&cGod Mode DISABLED!"
+
+home:
+  only_players: "&cOnly players can use this command."
+  no_permission: "&cYou don't have permission to use this command."
+
+kit:
+  only_players: "&cOnly players can use this command."
+  available_title: "&8&m-----------------------------\n&e&lAVAILABLE KITS"
+  available_format: "&a➤ &f%kit%"
+  available_footer: "&7Use &e/kit <name> &7to receive a kit.\n&8&m-----------------------------"
+  not_found: "&cKit not found."
+  no_permission: "&cYou don't have permission to use this kit."
+  on_cooldown: "&cYou must wait &e%time% &cto use this kit again."
+  received: "&aYou received the kit &e%kit%&a!"
+
+loan:
+  only_players: "&cOnly players can use this command."
+  no_permission: "&cYou don't have permission to use this command."
+
+ping:
+  only_players: "&cOnly players can use this command."
+  header: "&8&m-------------------------\n&b&l      SYNTRI PING\n"
+  value: "&fYour ping: %color%%ping%ms"
+  status: "&fStatus: %status%"
+  footer: "&8&m-------------------------"
+  status_levels:
+    good: "&a&lStable Ping"
+    medium: "&e&lUnstable Ping"
+    bad: "&c&lPoor Ping"
+
+sethome:
+  only_players: "&cOnly players can use this command."
+  no_permission: "&cYou don't have permission to use this command."
+  no_name: "&cPlease provide a name for your home."
+  success: "&aYou have set your home named: &e%home%"
+
+setwarp:
+  only_players: "&cOnly players can use this command."
+  no_permission: "&cYou don't have permission to use this command."
+  usage: "&cUsage: /setwarp <name>"
+  success: "&aWarp '&e%warp%&a' saved successfully."
+
+spawn:
+  only_players: "&cOnly players can use this command."
+  no_permission_set: "&cYou don't have permission to set the spawn."
+  no_permission_teleport: "&cYou don't have permission to teleport to the spawn."
+  set_success: "&aSpawn point set successfully."
+
+version:
+  no_permission: "&cYou don't have permission to see the plugin version."
+  display: "&6Syntri &fv%version% &7- The essential for your server."
+
+
+teleport:
+  only_players: "&cOnly players can use this command."
+  no_permission: "&cYou don't have permission to use this command."
+  usage_tp: "&cUsage: /tp <player>"
+  usage_tpa: "&cUsage: /tpa <player> | aceitar | recusar"
+  player_not_found: "&cPlayer not found."
+  teleported: "&aYou have been teleported to &e%target%&a."
+  teleported_to_you: "&eYou have been teleported to &6%player%."
+  all_teleported: "&aAll players have been teleported to you."
+  cannot_self_request: "&cYou cannot send a teleport request to yourself."
+  in_combat: "&cYou are in combat! Please wait to send teleport requests."
+  cooldown: "&cPlease wait before sending another teleport request."
+  request_sent: "&aTeleport request sent to &e%target%&a."
+  request_expired: "&cYour teleport request to &e%target% &cexpired."
+  no_request: "&cYou don't have any pending teleport requests."
+  accepted: "&aYou accepted the teleport request from &e%player%&a."
+  denied: "&cYou denied the teleport request."
+  accepted_by_target: "&aYour teleport request was accepted."
+  denied_by_target: "&cYour teleport request was denied."
+  tpa_message: "&e%player% wants to teleport to you. "
+  tpa_accept: "§a§l[ACCEPT]"
+  tpa_deny: " §c§l[DENY]"
+
+warp:
+  only_players: "&cOnly players can use this command."
+  no_permission: "&cYou don't have permission to use this command."
+
+home2:
+  teleport_success: "&aYou have been teleported to home &e%home%&a."
+  not_found: "&cYou don't have a home named &e%home%&c."
+  world_not_found: "&cThe world for this home was not found."
+
+warp2:
+  teleport_success: "&aYou have been teleported to warp &e%warp%&a."
+  not_found: "&cYou don't have a warp named &e%warp%&c."
+  world_not_found: "&cThe world for this warp was not found."
+
+spawn2:
+  teleport_success: "&aYou have been teleported to spawn."
+  not_set: "&cSpawn is not set yet."
+  world_not_found: "&cSpawn world not found."
+
+

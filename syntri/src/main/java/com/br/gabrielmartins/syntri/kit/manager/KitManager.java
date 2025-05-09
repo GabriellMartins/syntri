@@ -1,6 +1,6 @@
-package com.br.gabrielmartins.engine.kit.manager;
+package com.br.gabrielmartins.syntri.kit.manager;
 
-import com.br.gabrielmartins.engine.kit.Kit;
+import com.br.gabrielmartins.syntri.kit.Kit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -8,10 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public class KitManager {
@@ -24,6 +22,23 @@ public class KitManager {
         kits.clear();
         cooldowns.clear();
         kitFile = file;
+
+        if (!file.exists()) {
+            try {
+                file.getParentFile().mkdirs();
+
+                InputStream defaultStream = KitManager.class.getClassLoader().getResourceAsStream("kits.yml");
+                if (defaultStream != null) {
+                    Files.copy(defaultStream, file.toPath());
+                } else {
+                    file.createNewFile();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
         for (String kitName : config.getKeys(false)) {

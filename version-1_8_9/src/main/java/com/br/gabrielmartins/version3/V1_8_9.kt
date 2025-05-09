@@ -5,6 +5,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 class V1_8_9 : VersionSupport {
+
     override fun sendActionBar(player: Player, message: String) {
         try {
             val version = Bukkit.getServer().javaClass.packageName.split(".")[3]

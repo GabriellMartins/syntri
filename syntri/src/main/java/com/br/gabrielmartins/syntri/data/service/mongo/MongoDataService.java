@@ -1,6 +1,9 @@
 package com.br.gabrielmartins.syntri.data.service.mongo;
 
+import com.br.gabrielmartins.syntri.MessagesManager;
 import com.br.gabrielmartins.engine.data.service.DataService;
+import com.br.gabrielmartins.syntri.SyntriPlugin;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -49,29 +52,33 @@ public class MongoDataService implements DataService {
 
     @Override
     public void listHomes(Player player) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
         var docs = getHomes().find(eq("uuid", player.getUniqueId().toString()));
+
         if (!docs.iterator().hasNext()) {
-            player.sendMessage("§cVocê não tem casas salvas.");
+            player.sendMessage(mm.getMessage("home.none"));
             return;
         }
 
-        player.sendMessage("§a§lSuas casas:");
+        player.sendMessage(mm.getMessage("home.list_header"));
         for (Document doc : docs) {
-            player.sendMessage(" §e- " + doc.getString("home_name"));
+            player.sendMessage(mm.getMessage("home.list_item").replace("%name%", doc.getString("home_name")));
         }
     }
 
     @Override
     public void listWarps(Player player) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
         var docs = getWarps().find(eq("uuid", player.getUniqueId().toString()));
+
         if (!docs.iterator().hasNext()) {
-            player.sendMessage("§cVocê não tem warps salvas.");
+            player.sendMessage(mm.getMessage("warp.none"));
             return;
         }
 
-        player.sendMessage("§a§lSuas warps:");
+        player.sendMessage(mm.getMessage("warp.list_header"));
         for (Document doc : docs) {
-            player.sendMessage(" §e- " + doc.getString("warp_name"));
+            player.sendMessage(mm.getMessage("warp.list_item").replace("%name%", doc.getString("warp_name")));
         }
     }
 
@@ -82,7 +89,7 @@ public class MongoDataService implements DataService {
                 eq("home_name", homeName)
         )).first();
 
-        teleport(player, doc, homeName, "casa");
+        teleport(player, doc, homeName, "home");
     }
 
     @Override
@@ -109,8 +116,10 @@ public class MongoDataService implements DataService {
     }
 
     private void teleport(Player player, Document doc, String name, String tipo) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
+
         if (doc == null) {
-            player.sendMessage("§cVocê não tem uma " + tipo + " salva com o nome: " + name);
+            player.sendMessage(mm.getMessage(tipo + ".not_found").replace("%" + tipo + "%", name));
             return;
         }
 
@@ -121,9 +130,9 @@ public class MongoDataService implements DataService {
 
         if (Bukkit.getWorld(world) != null) {
             player.teleport(Bukkit.getWorld(world).getBlockAt((int) x, (int) y, (int) z).getLocation());
-            player.sendMessage("§aVocê foi teleportado para a " + tipo + " " + name + ".");
+            player.sendMessage(mm.getMessage(tipo + ".teleported").replace("%" + tipo + "%", name));
         } else {
-            player.sendMessage("§cO mundo da " + tipo + " não foi encontrado.");
+            player.sendMessage(mm.getMessage(tipo + ".world_not_found"));
         }
     }
 }

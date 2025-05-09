@@ -1,28 +1,27 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
+import com.br.gabrielmartins.syntri.MessagesManager;
 import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
+import com.br.gabrielmartins.syntri.SyntriPlugin;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-@CommandInfo(names = {"version"}, permission = {"syntri.tp"})
+@CommandInfo(names = {"version"}, permission = {"syntri.version"})
 public class SyntriVersionCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
 
-        if (args.length == 1 && args[0].equalsIgnoreCase("version")) {
-            if (!sender.hasPermission("syntri.version")) {
-                sender.sendMessage("§cVocê não tem permissão para ver a versão.");
-                return true;
-            }
-
-            String version = com.br.gabrielmartins.syntri.SyntriPlugin.getInstance().getDescription().getVersion();
-            sender.sendMessage("§6Syntri §fv" + version + " §7- O essencial do seu servidor.");
+        if (!sender.hasPermission("syntri.version")) {
+            sender.sendMessage(mm.getMessage("version.no_permission"));
             return true;
         }
 
-        sender.sendMessage("§cUso correto: /syntri version");
+        String version = SyntriPlugin.getInstance().getDescription().getVersion();
+        sender.sendMessage(mm.getMessage("version.display").replace("%version%", version));
         return true;
     }
 }

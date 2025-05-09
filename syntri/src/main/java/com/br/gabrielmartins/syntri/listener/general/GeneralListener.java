@@ -1,10 +1,7 @@
 package com.br.gabrielmartins.syntri.listener.general;
 
-import com.br.gabrielmartins.engine.api.translate.Translate;
 import com.br.gabrielmartins.engine.utils.color.ColorUtil;
-import com.br.gabrielmartins.engine.utils.ip.IPUtils;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -36,25 +33,27 @@ public class GeneralListener implements Listener {
         return plugin.getConfig().getBoolean("general." + path, false);
     }
 
+    private String msg(String path, Player p, String fallback) {
+        String raw = plugin.getConfig().getString(path, fallback);
+        raw = raw.replace("%player_name%", p.getName());
+        return ColorUtil.color(PlaceholderAPI.setPlaceholders(p, raw));
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage(null);
         if (!cfg("welcome-message.enabled")) return;
-
         Player p = e.getPlayer();
-        String lang = IPUtils.getPlayerLanguage(p);
-        String raw = plugin.getConfig().getString("general.welcome-message.text", "&aBem-vindo, %player_name%!");
-        p.sendMessage(ColorUtil.color(PlaceholderAPI.setPlaceholders(p, Translate.get(raw, lang))));
+        p.sendMessage(msg("general.welcome-message.text", p, "&aBem-vindo, %player_name%!"));
     }
 
-    @EventHandler public void onQuit(PlayerQuitEvent e) {
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
         e.setQuitMessage(null);
         if (!cfg("quit-message.enabled")) return;
-
         Player p = e.getPlayer();
-        String lang = IPUtils.getPlayerLanguage(p);
-        String raw = plugin.getConfig().getString("general.quit-message.text", "&e[Syntri] Jogador saiu: %player_name%");
-        Bukkit.getConsoleSender().sendMessage(ColorUtil.color(PlaceholderAPI.setPlaceholders(p, Translate.get(raw, lang))));
+        String message = msg("general.quit-message.text", p, "&e[Syntri] Jogador saiu: %player_name%");
+        Bukkit.getConsoleSender().sendMessage(message);
     }
 
     @EventHandler public void onCommand(PlayerCommandPreprocessEvent e) { if (cfg("prevent-command")) e.setCancelled(true); }
@@ -95,13 +94,20 @@ public class GeneralListener implements Listener {
 
     @EventHandler
     public void onItemBreak(PlayerItemBreakEvent e) {
-        String type = plugin.getConfig().getString("general.item-break.type", "ignore");
-        switch (type.toLowerCase()) {
+        String type = plugin.getConfig().getString("general.item-break.type", "ignore").toLowerCase();
+        Player p = e.getPlayer();
+        String itemName = e.getBrokenItem().getType().toString();
+
+        switch (type) {
             case "alert":
-                e.getPlayer().sendMessage(ColorUtil.color("&c[Syntri] Seu item quebrou: " + e.getBrokenItem().getType()));
+                String alertMsg = plugin.getConfig().getString("general.item-break.alert-message", "&c[Syntri] Seu item quebrou: %item%");
+                alertMsg = alertMsg.replace("%player_name%", p.getName()).replace("%item%", itemName);
+                p.sendMessage(ColorUtil.color(PlaceholderAPI.setPlaceholders(p, alertMsg)));
                 break;
             case "log":
-                Bukkit.getLogger().info("[Syntri] " + e.getPlayer().getName() + " quebrou " + e.getBrokenItem().getType());
+                String logMsg = plugin.getConfig().getString("general.item-break.log-message", "[Syntri] %player_name% quebrou %item%");
+                logMsg = logMsg.replace("%player_name%", p.getName()).replace("%item%", itemName);
+                Bukkit.getLogger().info(ColorUtil.color(PlaceholderAPI.setPlaceholders(p, logMsg)));
                 break;
             default:
                 break;

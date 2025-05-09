@@ -1,7 +1,10 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.engine.kit.manager.KitManager;
+import com.br.gabrielmartins.syntri.MessagesManager;
 import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
+import com.br.gabrielmartins.syntri.SyntriPlugin;
+
+import com.br.gabrielmartins.syntri.kit.manager.KitManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,13 +15,15 @@ public class CreateKitCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
+
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§cApenas jogadores podem usar este comando.");
+            sender.sendMessage(mm.getMessage("createkit.only_players"));
             return true;
         }
 
         if (args.length < 3) {
-            sender.sendMessage("§cUso correto: /createkit <nome> <permissao> <tempo>");
+            sender.sendMessage(mm.getMessage("createkit.usage"));
             return true;
         }
 
@@ -29,7 +34,13 @@ public class CreateKitCommand implements CommandExecutor {
         Player player = (Player) sender;
         KitManager.createKit(player, name, permission, time);
 
-        player.sendMessage("§aKit §e" + name + "§a criado com sucesso com permissão §e" + permission + "§a e cooldown de §e" + time + "§a.");
+        player.sendMessage(
+                mm.getMessage("createkit.success")
+                        .replace("%kit%", name)
+                        .replace("%permission%", permission)
+                        .replace("%cooldown%", time)
+        );
+
         return true;
     }
 }

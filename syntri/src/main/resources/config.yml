@@ -1,92 +1,90 @@
-
 # ─────────────────────────────────────────────────────────────────────
-# ⚙️ Configuração do Banco de Dados
+# ⚙️ Database Configuration
 # ─────────────────────────────────────────────────────────────────────
 
 backend:
-  type: "mongodb"
-  uri: "mongodb+srv://shaw:MHTmlORy2abyOGze@hazemc.p53i0tr.mongodb.net/hazemc?retryWrites=true&w=majority&appName=HazeMC"
-  database: "hazemc"
+  type: "mysql"                    # Type of backend used: mysql, sqlite, mongodb, etc.
+  host: "198.89.99.179"           # IP or hostname of the database server
+  port: 3306                      # Port used to connect to the database
+  database: "s20_fuzy_shaw"       # Name of the database
+  username: "u20_LoZOofh8zE"      # Username for database authentication
+  password: "Ck.DmYnEvjtKo^+L!9oj.RGT" # Password for database authentication
+  file: "database.db"             # Used only if the type is SQLite
+  uri: "mongodb://localhost"      # MongoDB URI (optional, if using MongoDB)
+  service: "XE"                   # Oracle service name, if used
 
 # ─────────────────────────────────────────────────────────────────────
-# 🔧 Configuração Geral do Servidor
+# 🔧 General Server Settings
 # ─────────────────────────────────────────────────────────────────────
 
 general:
-  language: "us"
+  language: "us"                  # Language used in messages and interface
 
   welcome-message:
-    enabled: true
-    text: "&aNome: %syntri_name% | Vida: %syntri_health% | Mundo: %syntri_world% | Ping: %syntri_ping% | Online: %syntri_online% | Banco: %syntri_backend%"
+    enabled: true                 # Whether the welcome message is enabled
+    text: "&aName: %syntri_name% | Health: %syntri_health% | World: %syntri_world% | Ping: %syntri_ping% | Online: %syntri_online% | Backend: %syntri_backend%"
 
   quit-message:
-    enabled: true
-    text: "&e[Syntri] O jogador %player_name% saiu do servidor."
+    enabled: true                 # Whether the quit message is enabled
+    text: "&e[Syntri] Player %player_name% has left the server."
 
-# 📌 Tipos para eventos não-canceláveis
+# 📌 Non-cancellable Events (you can't stop them, just react)
 
 item-break:
-  # Define o comportamento ao quebrar um item:
-  # alert  → envia uma mensagem ao jogador
-  # log    → registra no console
-  # ignore → não faz nada
-  type: "alert"
+  type: "alert"                   # What to do when an item breaks: alert (send to player), log (send to console), or ignore
 
 respawn:
-  # Define onde o jogador renasce após morrer:
-  # default → comportamento padrão (cama, âncora, etc.)
-  # spawn   → força o renascimento no spawn do mundo
-  type: "default"
+  type: "default"                 # Where to respawn player: default (bed/anchor), spawn (world spawn)
 
+# ⚙️ Cancellable Event Behaviors
+# If set to true, the action below is prevented
 
-# ⚙️ Comportamentos de eventos canceláveis
-prevent-damage: false              # Impede qualquer tipo de dano ao jogador (PvP, queda, fogo, etc.)
-prevent-hunger: false              # Impede que a barra de fome diminua
-prevent-block-break: true          # Impede jogadores de quebrarem blocos
-prevent-block-place: false         # Impede jogadores de colocarem blocos
-prevent-interact: false            # Impede interações com blocos (alavancas, portas, baús, etc.)
-prevent-item-drop: false           # Impede que jogadores joguem itens no chão
-prevent-item-pickup: false         # Impede que jogadores peguem itens do chão
-prevent-weather-change: false      # Impede mudanças climáticas no mundo (ex: chuva, trovão)
-prevent-gamemode-change: false     # Impede mudança de modo de jogo (Survival, Creative...)
-prevent-command: false             # Impede o uso de comandos por jogadores
-prevent-inventory-click: false     # Impede cliques dentro de qualquer inventário
-prevent-inventory-open: false      # Impede abertura de qualquer tipo de inventário
-prevent-inventory-drag: false      # Impede arrastar itens no inventário
-prevent-entity-interact: false     # Impede interação com entidades (ex: aldeões, molduras, cavalos)
-prevent-shear: false               # Impede o uso de tesouras em entidades (ex: tosar ovelhas)
-prevent-item-swap: false           # Impede troca de itens na hotbar com scroll do mouse
-prevent-bucket-fill: false         # Impede o uso de baldes para pegar líquidos (água, lava)
-prevent-bucket-empty: false        # Impede o uso de baldes para despejar líquidos
-prevent-ignite: false              # Impede incendiar blocos (ex: com isqueiro)
-prevent-explosions: false          # Impede explosões causadas por entidades ou blocos (ex: Creeper, TNT)
-prevent-portal: false              # Impede o uso de portais (Nether, End)
-prevent-teleport: false            # Impede qualquer tipo de teleporte
-prevent-enchant: false             # Impede encantamentos em itens
-prevent-bed: false                 # Impede jogadores de deitarem em camas
-prevent-vehicle-enter: false       # Impede entrada em veículos (barcos, minecarts)
-prevent-vehicle-exit: false        # Impede saída de veículos
-prevent-consume: false             # Impede consumo de comida, poções, leite etc.
-prevent-hanging-place: false       # Impede colocação de itens pendurados (quadros, molduras)
-prevent-hanging-break: false       # Impede quebra de itens pendurados
-prevent-world-unload: false        # Impede o descarregamento (unload) de mundos do servidor
-
+prevent-damage: false              # Prevents all types of damage (PvP, fall, fire, etc.)
+prevent-hunger: false              # Prevents hunger bar from decreasing
+prevent-block-break: true          # Prevents players from breaking blocks
+prevent-block-place: false         # Prevents placing blocks
+prevent-interact: false            # Prevents interactions (doors, levers, chests, etc.)
+prevent-item-drop: false           # Prevents dropping items
+prevent-item-pickup: false         # Prevents picking up items
+prevent-weather-change: false      # Prevents weather changes (e.g., rain)
+prevent-gamemode-change: false     # Prevents switching between game modes
+prevent-command: false             # Prevents use of any commands
+prevent-inventory-click: false     # Prevents clicking in inventories
+prevent-inventory-open: false      # Prevents opening inventories
+prevent-inventory-drag: false      # Prevents dragging items in inventories
+prevent-entity-interact: false     # Prevents interacting with entities (villagers, item frames, etc.)
+prevent-shear: false               # Prevents shearing entities like sheep
+prevent-item-swap: false           # Prevents switching hotbar slots with scroll
+prevent-bucket-fill: false         # Prevents filling buckets (water, lava)
+prevent-bucket-empty: false        # Prevents emptying buckets
+prevent-ignite: false              # Prevents setting fire (e.g., with flint & steel)
+prevent-explosions: false          # Prevents explosions (TNT, creepers, etc.)
+prevent-portal: false              # Prevents portal usage (Nether, End)
+prevent-teleport: false            # Prevents teleportation (commands or effects)
+prevent-enchant: false             # Prevents item enchanting
+prevent-bed: false                 # Prevents using beds
+prevent-vehicle-enter: false       # Prevents entering vehicles (boats, minecarts)
+prevent-vehicle-exit: false        # Prevents exiting vehicles
+prevent-consume: false             # Prevents eating food, drinking potions, milk, etc.
+prevent-hanging-place: false       # Prevents placing paintings, item frames, etc.
+prevent-hanging-break: false       # Prevents breaking paintings, item frames, etc.
+prevent-world-unload: false        # Prevents world from unloading from memory
 
 # ─────────────────────────────────────────────────────────────────────
-# 🔧 Configuração do MOTD (Message of the Day)
+# 🔧 MOTD (Message of the Day) Configuration
 # ─────────────────────────────────────────────────────────────────────
 
 motd:
   enabled: true
   messages:
-    - "&eBem-vindodasdasda"
-    - "&aConfira nossos eventos!"
-    - "&bDivirta-se jogando!"
-  interval: 1
-  animation: true
+    - "&eWelcome!"
+    - "&aCheck out our events!"
+    - "&bHave fun playing!"
+  interval: 1                     # Time in seconds between MOTD message changes
+  animation: true                # Enables animated MOTD (cycling messages)
 
 # ─────────────────────────────────────────────────────────────────────
-# 📊 Configuração da Scoreboard
+# 📊 Scoreboard Configuration
 # ─────────────────────────────────────────────────────────────────────
 
 scoreboard:
@@ -95,8 +93,68 @@ scoreboard:
   lines:
     - "&7&m----------------------"
     - "&aNick: &f%player_name%"
-    - "&aVida: &f%syntri_health%"
+    - "&aHealth: &f%syntri_health%"
     - "&aPing: &f%syntri_ping%ms"
     - "&aOnline: &f%syntri_online%"
-    - "&aBanco: &f%syntri_backend%"
+    - "&aBackend: &f%syntri_backend%"
     - "&7&m----------------------"
+
+
+auto-messages:
+  enabled: true
+
+  messages:
+    prefix: "&8[&b&lSyntri&8]"
+    interval: 300 # in seconds
+    texts:
+      - "&aWelcome to &eSyntri&a! Use &e/kit &ato begin your journey."
+      - "<click:/discord>&bClick here to join our Discord server!</click>"
+      - "<click:https://discord.gg/ZgCF96j3>&9Click here to open our Discord in your browser</click>"
+      - "<click:/vote>&6Vote daily &fto earn exclusive rewards!</click>"
+      - "<click:/help>&eNeed help? Click here to get support</click>"
+      - "&7Remember to claim your daily login rewards with &a/rewards"
+      - "&dEnjoy your stay and make sure to follow our rules with &e/rules"
+
+  title:
+    enabled: true
+    main: "&bWelcome to &lSyntri"
+    subtitle: "&7Adventure awaits!"
+    fade-in: 10
+    stay: 60
+    fade-out: 10
+
+
+# ─────────────────────────────────────────────────────────────────────
+# 💰 Syntri Integrated Economy System (Vault Support)
+# ─────────────────────────────────────────────────────────────────────
+#
+# When `enabled: true`:
+#   ➤ Syntri registers its internal system with Vault as a valid Economy.
+#   ➤ Commands like /money, /pay, /eco, /topmoney will work.
+#   ➤ Player balances are stored in the configured database.
+#
+# When `enabled: false`:
+#   ➤ Syntri does NOT register an economy system.
+#   ➤ You must use another plugin that supports Vault Economy (e.g., EssentialsX).
+#   ➤ Economy commands will be disabled or throw errors.
+
+# ✅ Pros of enabling:
+#   - Fully integrated with Syntri
+#   - No need for external economy plugins
+#   - Compatible with other plugins via Vault
+
+# ❌ Cons of enabling:
+#   - Slightly higher memory and database usage
+
+# ✅ Pros of disabling:
+#   - Lets you use another Vault economy plugin
+#   - Reduces resource usage a bit
+
+# ❌ Cons of disabling:
+#   - Requires another plugin for economy support
+#   - Syntri economy commands won’t work
+
+economy:
+  enabled: true
+
+

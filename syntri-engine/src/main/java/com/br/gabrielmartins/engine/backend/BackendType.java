@@ -9,6 +9,7 @@ public enum BackendType {
     MARIADB,
     ORACLE,
     FIREBIRD,
+    REDIS,
     SQLSERVER;
 
     public static BackendType fromString(String value) {

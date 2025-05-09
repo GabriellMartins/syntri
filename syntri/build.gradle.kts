@@ -29,9 +29,11 @@ repositories {
     maven("https://repo.md-5.net/content/repositories/snapshots/")
 }
 
+
 dependencies {
     compileOnly("me.clip:placeholderapi:2.11.5")
 
+    compileOnly(files("../libs/Vault.jar"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":version-api"))
     implementation(project(":version-1_8_9"))
@@ -55,7 +57,10 @@ bukkit {
     main = "com.br.gabrielmartins.syntri.SyntriPlugin"
     authors = listOf("shaw")
     description = "Plugin modular com suporte a múltiplos bancos e integração PlaceholderAPI"
-    softDepend = listOf("PlaceholderAPI")
+    softDepend =
+        listOf(
+        "PlaceholderAPI",
+        "Vault")
 }
 
 checkstyle {

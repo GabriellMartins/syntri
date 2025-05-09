@@ -8,7 +8,6 @@ version = "1.0.0"
 repositories {
     mavenLocal()
     mavenCentral()
-
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
     maven("https://repo.md-5.net/content/repositories/snapshots/")
@@ -17,7 +16,9 @@ repositories {
 dependencies {
     implementation(project(":version-api"))
 
-    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.reflections:reflections:0.10.2")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")

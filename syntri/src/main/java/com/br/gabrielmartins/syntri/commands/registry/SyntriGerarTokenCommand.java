@@ -54,7 +54,7 @@ public class SyntriGerarTokenCommand implements CommandExecutor {
                 player.sendMessage("§e✔ Você já possui um token válido!");
                 player.sendMessage("§7Token atual: §f" + cached.token);
                 player.sendMessage("§7Use: §f/syntri vincular §e" + cached.token);
-                player.sendMessage("§7Ou acesse: §f" + SyntriPlugin.getInstance().PAINEL_URL + cached.token);
+                player.sendMessage("§7Ou acesse: §f" + SyntriPlugin.getInstance().PANEL_URL + cached.token);
                 return true;
             }
 
@@ -97,7 +97,7 @@ public class SyntriGerarTokenCommand implements CommandExecutor {
                             player.sendMessage("§a✔ Token gerado com sucesso!");
                             player.sendMessage("§7Token: §f" + token);
                             player.sendMessage("§7Use: §f/syntri vincular §e" + token);
-                            player.sendMessage("§7Ou acesse: §f" + SyntriPlugin.getInstance().PAINEL_URL + token);
+                            player.sendMessage("§7Ou acesse: §f" + SyntriPlugin.getInstance().PANEL_URL + token);
                         } else {
                             player.sendMessage("§cErro ao interpretar token retornado pela API.");
                         }

@@ -1,62 +1,65 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.engine.kit.Kit;
-import com.br.gabrielmartins.engine.kit.manager.KitManager;
+import com.br.gabrielmartins.syntri.MessagesManager;
 import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
+import com.br.gabrielmartins.syntri.SyntriPlugin;
+
+import com.br.gabrielmartins.syntri.kit.Kit;
+import com.br.gabrielmartins.syntri.kit.manager.KitManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@CommandInfo(names = {"kit"}, permission = {"syntri.tp"})
+@CommandInfo(names = {"kit"}, permission = {"syntri.kit"})
 public class KitCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
+
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§cApenas jogadores podem usar este comando.");
+            sender.sendMessage(mm.getMessage("kit.only_players"));
             return true;
         }
 
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            player.sendMessage("§8§m-----------------------------");
-            player.sendMessage("     §e§lKITS DISPONÍVEIS");
+            player.sendMessage(mm.getMessage("kit.available_title"));
             for (Kit kit : KitManager.getAllKits()) {
                 if (kit.getPermission() == null || player.hasPermission(kit.getPermission())) {
-                    player.sendMessage(" §a➤ §f" + kit.getName());
+                    player.sendMessage(mm.getMessage("kit.available_format").replace("%kit%", kit.getName()));
                 }
             }
-            player.sendMessage("§7Use §e/kit <nome>§7 para receber um kit.");
-            player.sendMessage("§8§m-----------------------------");
+            player.sendMessage(mm.getMessage("kit.available_footer"));
             return true;
         }
 
         Kit kit = KitManager.getKit(args[0]);
 
         if (kit == null) {
-            player.sendMessage("§cKit não encontrado.");
+            player.sendMessage(mm.getMessage("kit.not_found"));
             return true;
         }
 
         if (kit.getPermission() != null && !player.hasPermission(kit.getPermission())) {
-            player.sendMessage("§cVocê não tem permissão para este kit.");
+            player.sendMessage(mm.getMessage("kit.no_permission"));
             return true;
         }
 
         if (KitManager.isOnCooldown(kit.getName(), player.getUniqueId())) {
             long seconds = KitManager.getRemainingCooldown(kit.getName(), player.getUniqueId()) / 1000L;
-            player.sendMessage("§cVocê precisa esperar §e" + formatSeconds(seconds) + "§c para pegar esse kit novamente.");
+            player.sendMessage(mm.getMessage("kit.on_cooldown").replace("%time%", formatSeconds(seconds)));
             return true;
         }
 
         player.getInventory().setContents(kit.getContents().toArray(new ItemStack[0]));
         player.getInventory().setArmorContents(kit.getArmor().toArray(new ItemStack[0]));
-
         KitManager.setCooldown(kit.getName(), player.getUniqueId(), kit.getCooldownMillis());
-        player.sendMessage("§aVocê recebeu o kit §e" + kit.getName() + "§a!");
+
+        player.sendMessage(mm.getMessage("kit.received").replace("%kit%", kit.getName()));
         return true;
     }
 

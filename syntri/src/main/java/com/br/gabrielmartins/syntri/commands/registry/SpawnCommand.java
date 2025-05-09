@@ -1,20 +1,24 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
+import com.br.gabrielmartins.syntri.MessagesManager;
 import com.br.gabrielmartins.engine.data.table.DataTable;
 import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
+import com.br.gabrielmartins.syntri.SyntriPlugin;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(names = {"setspawn"}, permission = {"syntri.tp"})
+@CommandInfo(names = {"spawn", "setspawn"}, permission = {"syntri.tp"})
 public class SpawnCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§cApenas jogadores podem usar este comando.");
+            sender.sendMessage(mm.getMessage("spawn.only_players"));
             return true;
         }
 
@@ -23,16 +27,16 @@ public class SpawnCommand implements CommandExecutor {
         switch (label.toLowerCase()) {
             case "setspawn":
                 if (!player.hasPermission("syntri.setspawn")) {
-                    player.sendMessage("§cVocê não tem permissão para definir o spawn.");
+                    player.sendMessage(mm.getMessage("spawn.no_permission_set"));
                     return true;
                 }
                 DataTable.saveSpawn(player);
-                player.sendMessage("§aSpawn definido com sucesso.");
+                player.sendMessage(mm.getMessage("spawn.set_success"));
                 return true;
 
             case "spawn":
                 if (!player.hasPermission("syntri.spawn")) {
-                    player.sendMessage("§cVocê não tem permissão para ir ao spawn.");
+                    player.sendMessage(mm.getMessage("spawn.no_permission_teleport"));
                     return true;
                 }
                 DataTable.teleportToSpawn(player);

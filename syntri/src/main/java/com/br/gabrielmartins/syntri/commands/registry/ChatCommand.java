@@ -1,14 +1,16 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
 import com.br.gabrielmartins.engine.api.actionbar.ActionBarUtil;
-import com.br.gabrielmartins.engine.api.translate.Translate;
+import com.br.gabrielmartins.syntri.MessagesManager;
 import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
+import com.br.gabrielmartins.syntri.SyntriPlugin;
+
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.List;
 
 @CommandInfo(names = {"chat"}, permission = {"syntri.chat"})
 public class ChatCommand implements CommandExecutor {
@@ -17,51 +19,50 @@ public class ChatCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
+
         if (!sender.hasPermission("syntri.chat")) {
-            sender.sendMessage(Translate.get("chat.no_permission"));
+            sender.sendMessage(mm.getMessage("chat.no_permission"));
             return true;
         }
 
         if (args.length != 1) {
-            sender.sendMessage("§8§m-------------------------");
-            sender.sendMessage("       §b§l" + Translate.get("chat.title"));
-            sender.sendMessage(" ");
-            sender.sendMessage(" §f" + Translate.get("chat.usage_on"));
-            sender.sendMessage(" §f" + Translate.get("chat.usage_off"));
-            sender.sendMessage(" §f" + Translate.get("chat.usage_clear"));
-            sender.sendMessage("§8§m-------------------------");
+            List<String> usage = SyntriPlugin.getInstance().getMessagesManager().getMessageList("chat.usage");
+            usage.forEach(sender::sendMessage);
             return true;
         }
 
+        String name = getName(sender);
         String arg = args[0].toLowerCase();
+
         switch (arg) {
             case "on":
                 enabled = true;
-                broadcast("§a§l" + Translate.get("chat.activated"), "§f" + Translate.get("chat.enabled_by") + " §e" + getName(sender));
-                sendActionBar("§a✔ " + Translate.get("chat.actionbar_on"));
+                broadcast(mm.getMessage("chat.enabled_title"), mm.getMessage("chat.enabled_by").replace("%player%", name));
+                sendActionBar(mm.getMessage("chat.actionbar_enabled"));
                 break;
             case "off":
                 enabled = false;
-                broadcast("§c§l" + Translate.get("chat.deactivated"), "§f" + Translate.get("chat.disabled_by") + " §e" + getName(sender));
-                sendActionBar("§c✖ " + Translate.get("chat.actionbar_off"));
+                broadcast(mm.getMessage("chat.disabled_title"), mm.getMessage("chat.disabled_by").replace("%player%", name));
+                sendActionBar(mm.getMessage("chat.actionbar_disabled"));
                 break;
             case "clear":
-                clearChat(sender);
+                clearChat(name);
                 break;
             default:
-                sender.sendMessage("§c" + Translate.get("chat.invalid_command"));
+                sender.sendMessage(mm.getMessage("chat.invalid_command"));
         }
         return true;
     }
 
-    private void clearChat(CommandSender sender) {
-        String name = getName(sender);
+    private void clearChat(String senderName) {
+        String clearedMsg = SyntriPlugin.getInstance().getMessagesManager().getMessage("chat.cleared_by").replace("%player%", senderName);
         for (Player p : Bukkit.getOnlinePlayers()) {
             for (int i = 0; i < 100; i++) p.sendMessage("");
             p.sendMessage("§8§m-------------------------");
-            p.sendMessage("        §b§l" + Translate.get("chat.title"));
+            p.sendMessage("        §b§lChat Global");
             p.sendMessage(" ");
-            p.sendMessage(" §f" + Translate.get("chat.cleared_by") + " §a" + name);
+            p.sendMessage(" " + clearedMsg);
             p.sendMessage("§8§m-------------------------");
         }
     }
@@ -69,7 +70,7 @@ public class ChatCommand implements CommandExecutor {
     private void broadcast(String title, String message) {
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.sendMessage("§8§m-------------------------");
-            p.sendMessage("        §b§l" + Translate.get("chat.title"));
+            p.sendMessage("        §b§lChat Global");
             p.sendMessage(" ");
             p.sendMessage(" " + title);
             p.sendMessage(" " + message);
@@ -92,7 +93,7 @@ public class ChatCommand implements CommandExecutor {
                 }
                 ticks += 20;
             }
-        }.runTaskTimer(Bukkit.getPluginManager().getPlugin("Syntri"), 0L, 20L);
+        }.runTaskTimer(SyntriPlugin.getInstance(), 0L, 20L);
     }
 
     private String getName(CommandSender sender) {

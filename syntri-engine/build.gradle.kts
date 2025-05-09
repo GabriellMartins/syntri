@@ -27,7 +27,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
     implementation("org.json:json:20210307")
-
+    implementation("redis.clients:jedis:5.1.0")
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     implementation("com.zaxxer:HikariCP:4.0.3")

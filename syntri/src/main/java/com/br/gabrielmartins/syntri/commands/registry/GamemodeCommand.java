@@ -1,7 +1,9 @@
 package com.br.gabrielmartins.syntri.commands.registry;
 
-import com.br.gabrielmartins.engine.api.translate.Translate;
+import com.br.gabrielmartins.syntri.MessagesManager;
 import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
+import com.br.gabrielmartins.syntri.SyntriPlugin;
+
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,20 +15,24 @@ public class GamemodeCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
+
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Translate.get("commands.gamemode.only_players"));
+            sender.sendMessage(mm.getMessage("gamemode.only_players"));
             return true;
         }
 
         Player player = (Player) sender;
 
         if (!player.hasPermission("syntri.gamemode")) {
-            player.sendMessage(Translate.get("commands.gamemode.no_permission"));
+            player.sendMessage(mm.getMessage("gamemode.no_permission"));
             return true;
         }
 
         if (args.length == 0) {
-            player.sendMessage(Translate.get("commands.gamemode.provide_mode"));
+            for (String line : mm.getMessages().getStringList("gamemode.usage")) {
+                player.sendMessage(line);
+            }
             return false;
         }
 
@@ -34,25 +40,29 @@ public class GamemodeCommand implements CommandExecutor {
             int mode = Integer.parseInt(args[0]);
 
             switch (mode) {
+                case 0:
+                    player.setGameMode(GameMode.ADVENTURE);
+                    player.sendMessage(mm.getMessage("gamemode.adventure"));
+                    break;
                 case 1:
                     player.setGameMode(GameMode.CREATIVE);
-                    player.sendMessage(Translate.get("commands.gamemode.creative"));
+                    player.sendMessage(mm.getMessage("gamemode.creative"));
                     break;
                 case 2:
                     player.setGameMode(GameMode.SURVIVAL);
-                    player.sendMessage(Translate.get("commands.gamemode.survival"));
+                    player.sendMessage(mm.getMessage("gamemode.survival"));
                     break;
                 case 3:
                     player.setGameMode(GameMode.SPECTATOR);
-                    player.sendMessage(Translate.get("commands.gamemode.spectator"));
+                    player.sendMessage(mm.getMessage("gamemode.spectator"));
                     break;
                 default:
-                    player.sendMessage(Translate.get("commands.gamemode.invalid_mode"));
+                    player.sendMessage(mm.getMessage("gamemode.invalid_mode"));
                     break;
             }
 
         } catch (NumberFormatException e) {
-            player.sendMessage(Translate.get("commands.gamemode.invalid_number"));
+            player.sendMessage(mm.getMessage("gamemode.invalid_number"));
         }
 
         return true;

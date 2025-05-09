@@ -22,14 +22,8 @@ public class CommandLoader {
     }
 
     public void load(String basePackage) {
-        plugin.getLogger().info("Escaneando pacote de comandos: " + basePackage);
-
         Reflections reflections = new Reflections(basePackage);
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(CommandInfo.class);
-
-        if (classes.isEmpty()) {
-            plugin.getLogger().warning("Nenhum comando encontrado no pacote: " + basePackage);
-        }
 
         for (Class<?> clazz : classes) {
             if (!CommandExecutor.class.isAssignableFrom(clazz)) continue;
@@ -47,13 +41,9 @@ public class CommandLoader {
                     }
 
                     registerCommand(command);
-                    plugin.getLogger().info("Comando registrado: /" + name);
                 }
 
-            } catch (Exception e) {
-                plugin.getLogger().severe("Erro ao registrar comando: " + clazz.getName());
-                e.printStackTrace();
-            }
+            } catch (Exception ignored) {}
         }
     }
 

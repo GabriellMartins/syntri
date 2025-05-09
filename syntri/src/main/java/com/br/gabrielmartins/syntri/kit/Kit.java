@@ -1,4 +1,4 @@
-package com.br.gabrielmartins.engine.kit;
+package com.br.gabrielmartins.syntri.kit;
 
 import org.bukkit.inventory.ItemStack;
 
