@@ -72,17 +72,17 @@ tasks.named("checkstyleMain") {
     enabled = false
 }
 
-tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
-    archiveClassifier.set("")
-    mergeServiceFiles()
+tasks {
+    build {
+        dependsOn(shadowJar)git add .
+    }
 
-    minimize {
-        exclude(dependency("org.reflections:reflections"))
-        exclude(dependency("org.json:json"))
-        exclude(dependency("com.zaxxer:HikariCP"))
-        exclude(dependency("org.jetbrains:annotations"))
+    withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+        archiveClassifier.set("")
+        destinationDirectory.set(file("$buildDir/libs"))
     }
 }
+
 
 tasks.build {
     dependsOn(tasks.shadowJar)

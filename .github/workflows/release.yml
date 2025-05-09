@@ -24,8 +24,8 @@ jobs:
       - name: Dar permissão ao gradlew
         run: chmod +x ./gradlew
 
-      - name: Buildar Plugin
-        run: ./gradlew build
+      - name: Buildar Plugin com ShadowJar
+        run: ./gradlew shadowJar
 
       - name: Criar Release no GitHub
         uses: softprops/action-gh-release@v1
