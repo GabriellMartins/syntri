@@ -3,11 +3,13 @@ tablist:
   refresh_ticks: 60
 
   header:
-    - "<gradient:#00ffaa:#0055ff>&lSyntri Network</gradient>"
-    - "&7Bem-vindo, &a%player_name%"
-    - "&7Online: &a%online% &8/&c%max_players%"
+    - "<gradient:#00ffaa:#0055ff>Syntri Network</gradient>"
+    - "&7Welcome, &a%syntri_name%"
+    - "&7World: &b%syntri_world%"
+    - "&7Gamemode: &e%syntri_gamemode%"
 
   footer:
-    - "&fSeu ping: &e%player_ping%ms"
-    - "&fSite: &bwww.syntri.com"
-    - "&fDiscord: &ddiscord.gg/syntri"
+    - "&7Online: &a%syntri_online% &8/&c%syntri_max_players%"
+    - "&7Your Ping: &e%syntri_ping%ms"
+    - "&7Backend: &5%syntri_backend%"
+    - "&7Discord: &ddiscord.gg/syntri"

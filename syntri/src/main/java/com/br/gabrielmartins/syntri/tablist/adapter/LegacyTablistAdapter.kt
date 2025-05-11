@@ -6,35 +6,38 @@ import org.bukkit.entity.Player
 class LegacyTablistAdapter : TablistAdapter {
 
     override fun sendTablist(player: Player, header: String, footer: String) {
+        val version = Bukkit.getServer().javaClass.packageName.split(".").last()
+        if (version == "v1_7_R4") {
+            return
+        }
+
         try {
-            val craftPlayerClass = Class.forName("org.bukkit.craftbukkit.${getVersion()}.entity.CraftPlayer")
-            val entityPlayer = craftPlayerClass.getMethod("getHandle").invoke(player)
+            val chatComponentClass = Class.forName("net.minecraft.server.$version.IChatBaseComponent")
+            val serializerClass = Class.forName("net.minecraft.server.$version.IChatBaseComponent\$ChatSerializer")
 
-            val chatSerializerClass = Class.forName("net.minecraft.server.${getVersion()}.IChatBaseComponent\$ChatSerializer")
-            val chatBaseComponentClass = Class.forName("net.minecraft.server.${getVersion()}.IChatBaseComponent")
-
-            val headerComponent = chatSerializerClass.getMethod("a", String::class.java)
+            val headerComponent = serializerClass.getMethod("a", String::class.java)
                 .invoke(null, "{\"text\":\"$header\"}")
-            val footerComponent = chatSerializerClass.getMethod("a", String::class.java)
+            val footerComponent = serializerClass.getMethod("a", String::class.java)
                 .invoke(null, "{\"text\":\"$footer\"}")
 
-            val packetClass = Class.forName("net.minecraft.server.${getVersion()}.PacketPlayOutPlayerListHeaderFooter")
-            val packet = packetClass.getConstructor(chatBaseComponentClass).newInstance(headerComponent)
+            val packetClass = Class.forName("net.minecraft.server.$version.PacketPlayOutPlayerListHeaderFooter")
+            val packet = packetClass.getConstructor(chatComponentClass).newInstance(headerComponent)
 
-            val field = packetClass.getDeclaredField("b")
-            field.isAccessible = true
-            field.set(packet, footerComponent)
+            val footerField = packetClass.getDeclaredField("b")
+            footerField.isAccessible = true
+            footerField.set(packet, footerComponent)
 
-            val playerConnection = entityPlayer.javaClass.getField("playerConnection").get(entityPlayer)
-            val sendPacketMethod = playerConnection.javaClass.getMethod("sendPacket", Class.forName("net.minecraft.server.${getVersion()}.Packet"))
+            val handle = player.javaClass.getMethod("getHandle").invoke(player)
+            val playerConnection = handle.javaClass.getField("playerConnection").get(handle)
+            val sendPacketMethod = playerConnection.javaClass.getMethod(
+                "sendPacket",
+                Class.forName("net.minecraft.server.$version.Packet")
+            )
             sendPacketMethod.invoke(playerConnection, packet)
-
+        } catch (e: ClassNotFoundException) {
+            if (!version.contains("v1_7")) e.printStackTrace()
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    private fun getVersion(): String {
-        return Bukkit.getServer().javaClass.getPackage().name.split(".")[3]
     }
 }

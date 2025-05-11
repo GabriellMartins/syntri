@@ -1,17 +1,17 @@
 scoreboard:
   enabled: true
-  title: "<gradient:#00ffff:#0000ff>Syntri Network</gradient>"
-  lines:
-    - " "
-    - "&fPlayer: &a%player_name%"
-    - "&fPing: &b%player_ping% ms"
-    - "&fWorld: &e%player_world%"
-    - "&fOnline: &d%server_online%"
-    - "&fBalance: &6%vault_eco_balance%"
-    - " "
-    - "§eplay.syntri.net"
-
+  title: "<gradient:#00ffff:#0000ff>Syntri</gradient>"
   animation:
     enabled: false
-    style: OCEAN     # Options: RAINBOW, FLAME, OCEAN, CYBER, CHROME, PINK_PURPLE
-    interval_ticks: 10
+    style: WAVE
+    interval_ticks: 20
+  lines:
+    - "&fPlayer: &a%syntri_name%"
+    - "&fPing: &b%syntri_ping%ms"
+    - "&fWorld: &e%syntri_world%"
+    - "&fGamemode: &6%syntri_gamemode%"
+    - "&fHealth: &c%syntri_health%"
+    - "&fOnline: &d%syntri_online%"
+    - "&fBackend: &5%syntri_backend%"
+    - "&fMax Players: &f%syntri_max_players%"
+    - "&eplay.syntri.net"

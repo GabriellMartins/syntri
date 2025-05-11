@@ -15,10 +15,12 @@ import com.br.gabrielmartins.syntri.cache.TopMoneyCache;
 import com.br.gabrielmartins.syntri.kit.manager.KitManager;
 import com.br.gabrielmartins.syntri.modulo.list.kits.KitModule;
 import com.br.gabrielmartins.syntri.modules.MotdModule;
-import com.br.gabrielmartins.syntri.modulo.list.scoreboard.ScoreboardModule;
 import com.br.gabrielmartins.syntri.modulo.ModuleLoader;
+import com.br.gabrielmartins.syntri.modulo.list.optimizer.OptimizerModule;
+import com.br.gabrielmartins.syntri.modulo.list.scoreboard.ScoreboardModule;
 import com.br.gabrielmartins.syntri.modulo.list.tablist.TablistModule;
 import com.br.gabrielmartins.syntri.modulo.loader.ModuleAutoLoader;
+import com.br.gabrielmartins.syntri.optimization.ChunkOptimizer;
 import com.br.gabrielmartins.syntri.tablist.TablistManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,21 +59,19 @@ public final class SyntriPlugin extends JavaPlugin {
     private TopMoneyCache topMoneyCache;
     private TablistManager tablistManager;
     private ModuleLoader loadModules;
-
-    @Setter
-    private LoaderListener listenerLoad;
+    @Setter private LoaderListener listenerLoad;
 
     @Override
     public void onLoad() {
         instance = this;
         System.setProperty("file.encoding", "UTF-8");
-
-
     }
 
     @Override
     public void onEnable() {
         instance = this;
+
+        new ChunkOptimizer(this);
 
         reloadConfig();
         saveDefaultConfig();
@@ -87,7 +87,7 @@ public final class SyntriPlugin extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SyntriPlaceholder().register();
         } else {
-            new SyntriPlaceholder().canRegister();
+            new SyntriPlaceholder().register();
         }
 
         loadConfig();
@@ -166,6 +166,7 @@ public final class SyntriPlugin extends JavaPlugin {
         new TablistModule(loadModules, this).register();
         new MotdModule(loadModules, this).register();
         new KitModule(loadModules, this).register();
+        new OptimizerModule(loadModules, this).register();
 
     }
 

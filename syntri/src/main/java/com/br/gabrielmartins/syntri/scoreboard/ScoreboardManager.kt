@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Scoreboard
 import java.util.*
 
@@ -24,31 +25,52 @@ class ScoreboardManager(
     fun apply(player: Player) {
         if (!config.getBoolean("scoreboard.enabled", true)) return
 
-        val titleRaw = config.getString("scoreboard.title", "&aSyntri") ?: "&aSyntri"
-        val lines = config.getStringList("scoreboard.lines")
-        val scoreboard = Bukkit.getScoreboardManager()?.newScoreboard ?: return
-
-        val objectiveName = "syntri_${player.name.lowercase().take(10)}"
-        scoreboard.getObjective(objectiveName)?.unregister()
-
-        val objective = scoreboard.registerNewObjective(objectiveName, "dummy")
+        val manager = Bukkit.getScoreboardManager() ?: return
+        val board = manager.newScoreboard
+        val objective = board.registerNewObjective("dummy", "dummy")
         objective.displaySlot = DisplaySlot.SIDEBAR
-        objective.displayName = formatText(titleRaw, player)
 
-        var line = lines.size
-        for (raw in lines) {
-            val formatted = formatText(raw, player)
-            val entry = if (formatted.length > 40) formatted.substring(0, 40) else formatted
-            objective.getScore(entry).score = line--
+        var rawTitle = config.getString("scoreboard.title", "&bSyntri Network") ?: "&bSyntri Network"
+
+        if (supportsRGB) {
+            rawTitle = applyGradientTags(rawTitle)
+        } else {
+            rawTitle = rawTitle.replace(gradientRegex) { "&b${it.groupValues[3]}" }
         }
 
-        player.scoreboard = scoreboard
-        boards[player.uniqueId] = scoreboard
+        var title = ChatColor.translateAlternateColorCodes('&', rawTitle)
+        title = ChatColor.stripColor(title)?.let {
+            if (it.length > 32) title.substring(0, title.length - (it.length - 32)) else title
+        } ?: title
+
+        objective.displayName = title
+
+        val lines = config.getStringList("scoreboard.lines").reversed()
+        lines.forEachIndexed { index, line ->
+            val text = formatText(line, player)
+            objective.getScore(text.take(40)).score = index + 1
+        }
+
+        boards[player.uniqueId] = board
+        player.scoreboard = board
+    }
+
+    fun updateLines(player: Player) {
+        val board = boards[player.uniqueId] ?: return
+        val objective = board.getObjective(DisplaySlot.SIDEBAR) ?: return
+
+        board.entries.forEach { board.resetScores(it) }
+
+        val lines = config.getStringList("scoreboard.lines").reversed()
+        lines.forEachIndexed { index, line ->
+            val text = formatText(line, player)
+            objective.getScore(text.take(40)).score = index + 1
+        }
     }
 
     fun remove(player: Player) {
-        player.scoreboard = Bukkit.getScoreboardManager()?.mainScoreboard ?: return
         boards.remove(player.uniqueId)
+        player.scoreboard = Bukkit.getScoreboardManager()?.mainScoreboard ?: return
     }
 
     fun startTitleAnimation(players: Collection<Player>) {
@@ -60,22 +82,30 @@ class ScoreboardManager(
         animationTaskId?.let { Bukkit.getScheduler().cancelTask(it) }
 
         animationTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
-            val title = config.getString("scoreboard.title", "Syntri") ?: "Syntri"
-            val animated = animationType.generateNext(title, animationIndex++)
+            val baseTitle = config.getString("scoreboard.title", "Syntri") ?: "Syntri"
+            val animated = animationType.generateNext(baseTitle, animationIndex++)
 
             players.forEach { player ->
-                val board = boards[player.uniqueId] ?: return@forEach
-                board.objectives.find { it.displaySlot == DisplaySlot.SIDEBAR }?.displayName = animated
+                boards[player.uniqueId]
+                    ?.getObjective(DisplaySlot.SIDEBAR)
+                    ?.displayName = animated.take(32)
             }
         }, 0L, interval)
     }
 
     private fun formatText(text: String, player: Player): String {
-        var parsed = ChatColor.translateAlternateColorCodes('&', text).replace('$', '§')
+        var parsed = text
+
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             parsed = PlaceholderAPI.setPlaceholders(player, parsed)
         }
-        if (supportsRGB) parsed = applyGradientTags(parsed)
+
+        if (supportsRGB) {
+            parsed = applyGradientTags(parsed)
+        }
+
+        parsed = ChatColor.translateAlternateColorCodes('&', parsed).replace('$', '§')
+
         return parsed
     }
 
@@ -90,8 +120,12 @@ class ScoreboardManager(
     }
 
     private fun isVersionAtLeast(target: Int): Boolean {
-        val version = Bukkit.getBukkitVersion().split("-")[0]
-        val major = version.split(".")[1].toIntOrNull() ?: return false
-        return major >= target
+        return try {
+            val version = Bukkit.getBukkitVersion().split("-")[0]
+            val major = version.split(".")[1].toIntOrNull() ?: 0
+            major >= target
+        } catch (ex: Exception) {
+            false
+        }
     }
 }

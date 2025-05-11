@@ -1,0 +1,6 @@
+optimizer:
+  enabled: false
+  chunk: false
+  entity: false
+  chunk-entity-limit: false
+  redstone: false

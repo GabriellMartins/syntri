@@ -19,7 +19,6 @@ public class ScoreboardListener implements Listener {
         this.scoreboard = scoreboard;
         this.plugin = plugin;
 
-        scoreboard.startTitleAnimation(Bukkit.getOnlinePlayers());
         startAutoUpdate();
     }
 
@@ -27,8 +26,9 @@ public class ScoreboardListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            scoreboard.apply(player);
-        }, 20L);
+            scoreboard.apply(player); // aplica título e linhas
+            scoreboard.startTitleAnimation(Bukkit.getOnlinePlayers()); // inicia animação
+        }, 10L);
     }
 
     @EventHandler
@@ -41,9 +41,9 @@ public class ScoreboardListener implements Listener {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    scoreboard.apply(player);
+                    scoreboard.updateLines(player);
                 }
             }
-        }.runTaskTimer(plugin, 20L, 40L);
+        }.runTaskTimer(plugin, 40L, 60L); // delay inicial + intervalo ajustado
     }
 }

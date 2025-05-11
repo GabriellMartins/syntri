@@ -28,6 +28,11 @@ public class MessagesManager {
             plugin.saveResource("messages.yml", false);
         }
 
+        File permissionsFile = new File(plugin.getDataFolder(), "permissions.md");
+        if (!permissionsFile.exists()) {
+            plugin.saveResource("permissions.md", false);
+        }
+
         messages = YamlConfiguration.loadConfiguration(messagesFile);
     }
 
@@ -35,7 +40,23 @@ public class MessagesManager {
         return messages;
     }
 
-    // ✅ Para mensagens simples ou listas convertidas em uma única string com \n
+    public String getPermissionsMarkdown() {
+        File permissionsFile = new File(plugin.getDataFolder(), "permissions.md");
+
+        if (!permissionsFile.exists()) {
+            plugin.saveResource("permissions.md", false);
+            return "No permissions.md found. Default file created.";
+        }
+
+        try {
+            return java.nio.file.Files.readString(permissionsFile.toPath());
+        } catch (IOException e) {
+            plugin.getLogger().severe("Não foi possível ler o permissions.md");
+            e.printStackTrace();
+            return "Erro ao carregar permissions.md";
+        }
+    }
+
     public String getMessage(String path) {
         if (messages.isList(path)) {
             List<String> lines = messages.getStringList(path);

@@ -3,14 +3,13 @@ package com.br.gabrielmartins.syntri.commands.registry;
 import com.br.gabrielmartins.syntri.MessagesManager;
 import com.br.gabrielmartins.engine.loader.command.info.CommandInfo;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
-
 import com.br.gabrielmartins.syntri.kit.Kit;
 import com.br.gabrielmartins.syntri.kit.manager.KitManager;
+import com.br.gabrielmartins.syntri.kit.util.KitUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 @CommandInfo(names = {"kit"}, permission = {"syntri.kit"})
 public class KitCommand implements CommandExecutor {
@@ -55,10 +54,10 @@ public class KitCommand implements CommandExecutor {
             return true;
         }
 
-        player.getInventory().setContents(kit.getContents().toArray(new ItemStack[0]));
-        player.getInventory().setArmorContents(kit.getArmor().toArray(new ItemStack[0]));
-        KitManager.setCooldown(kit.getName(), player.getUniqueId(), kit.getCooldownMillis());
+        boolean success = KitUtils.giveKitItems(player, kit);
+        if (!success) return true;
 
+        KitManager.setCooldown(kit.getName(), player.getUniqueId(), kit.getCooldownMillis());
         player.sendMessage(mm.getMessage("kit.received").replace("%kit%", kit.getName()));
         return true;
     }

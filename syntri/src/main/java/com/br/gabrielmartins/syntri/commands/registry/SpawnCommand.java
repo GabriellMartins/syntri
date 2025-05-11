@@ -10,7 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(names = {"spawn", "setspawn"}, permission = {"syntri.tp"})
+@CommandInfo(names = {"spawn", "setspawn"}, permission = {"syntri.spawn"})
 public class SpawnCommand implements CommandExecutor {
 
     @Override

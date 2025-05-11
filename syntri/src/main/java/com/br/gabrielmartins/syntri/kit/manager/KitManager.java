@@ -1,15 +1,13 @@
 package com.br.gabrielmartins.syntri.kit.manager;
 
 import com.br.gabrielmartins.syntri.kit.Kit;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 
 public class KitManager {
@@ -125,30 +123,46 @@ public class KitManager {
     }
 
     public static String serializeItem(ItemStack item) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
-            dataOutput.writeObject(item);
+        if (item == null || item.getType() == null || item.getType() == Material.AIR) return null;
+        try {
+            Map<String, Object> map = item.serialize();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
+            oos.writeObject(map);
+            oos.close();
             return Base64.getEncoder().encodeToString(outputStream.toByteArray());
         } catch (Exception e) {
-            e.printStackTrace();
+            Bukkit.getLogger().warning("[Syntri] Erro ao serializar item: " + e.getMessage());
             return null;
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static ItemStack deserializeItem(String base64) {
-        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(base64));
-             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
-            return (ItemStack) dataInput.readObject();
+        try {
+            byte[] data = Base64.getDecoder().decode(base64);
+            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+            Object obj = ois.readObject();
+            ois.close();
+
+            if (!(obj instanceof Map)) {
+                Bukkit.getLogger().warning("[Syntri] Erro: objeto não é um mapa.");
+                return null;
+            }
+
+            Map<String, Object> map = (Map<String, Object>) obj;
+            return ItemStack.deserialize(map);
         } catch (Exception e) {
-            e.printStackTrace();
+            Bukkit.getLogger().warning("[Syntri] Falha ao desserializar item: " + e.getMessage());
             return null;
         }
     }
 
     public static boolean giveKitItems(Player player, Kit kit) {
-        ItemStack[] inventoryContents = player.getInventory().getContents();
+        boolean hasSpace = player.getInventory().firstEmpty() != -1;
 
         for (ItemStack item : kit.getItems()) {
+            if (item == null || item.getType() == Material.AIR) continue;
             HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(item);
             if (!remaining.isEmpty()) {
                 player.sendMessage("§cSeu inventário está cheio. Não foi possível receber todos os itens do kit.");
