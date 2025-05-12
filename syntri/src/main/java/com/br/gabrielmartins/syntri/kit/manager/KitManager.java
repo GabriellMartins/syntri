@@ -6,8 +6,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class KitManager {
@@ -71,7 +74,13 @@ public class KitManager {
         for (ItemStack item : contents) {
             if (item != null && item.getType() != Material.AIR) {
                 String path = name + ".items.item" + index++;
-                config.set(path + ".data", serializeItem(item));
+                String base64 = serializeItem(item);
+                if (base64 != null) {
+                    config.set(path + ".data", base64);
+                    Bukkit.getLogger().info("[Syntri] Kit " + name + " - Item salvo: " + item.getType());
+                } else {
+                    Bukkit.getLogger().warning("[Syntri] Não foi possível serializar item: " + item.getType());
+                }
             }
         }
 
@@ -79,17 +88,25 @@ public class KitManager {
         for (ItemStack item : armor) {
             if (item != null && item.getType() != Material.AIR) {
                 String path = name + ".armor.armor" + index++;
-                config.set(path + ".data", serializeItem(item));
+                String base64 = serializeItem(item);
+                if (base64 != null) {
+                    config.set(path + ".data", base64);
+                    Bukkit.getLogger().info("[Syntri] Kit " + name + " - Armadura salva: " + item.getType());
+                } else {
+                    Bukkit.getLogger().warning("[Syntri] Não foi possível serializar armadura: " + item.getType());
+                }
             }
         }
 
         try {
             config.save(kitFile);
             loadKits(kitFile);
+            Bukkit.getLogger().info("[Syntri] Kit " + name + " salvo com sucesso.");
         } catch (IOException e) {
-            e.printStackTrace();
+            Bukkit.getLogger().warning("[Syntri] Falha ao salvar kit " + name + ": " + e.getMessage());
         }
     }
+
 
     private static long parseTimeToMillis(String time) {
         time = time.trim().toLowerCase();
@@ -122,69 +139,32 @@ public class KitManager {
         cooldowns.computeIfAbsent(kit, k -> new HashMap<>()).put(player, System.currentTimeMillis() + duration);
     }
 
+
     public static String serializeItem(ItemStack item) {
-        if (item == null || item.getType() == null || item.getType() == Material.AIR) return null;
+        if (item == null || item.getType() == Material.AIR) return null;
         try {
-            Map<String, Object> map = item.serialize();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
-            oos.writeObject(map);
-            oos.close();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+            dataOutput.writeObject(item);
+            dataOutput.close();
             return Base64.getEncoder().encodeToString(outputStream.toByteArray());
-        } catch (Exception e) {
+        } catch (IOException e) {
             Bukkit.getLogger().warning("[Syntri] Erro ao serializar item: " + e.getMessage());
             return null;
         }
     }
-
-    @SuppressWarnings("unchecked")
     public static ItemStack deserializeItem(String base64) {
         try {
             byte[] data = Base64.getDecoder().decode(base64);
-            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-            Object obj = ois.readObject();
-            ois.close();
-
-            if (!(obj instanceof Map)) {
-                Bukkit.getLogger().warning("[Syntri] Erro: objeto não é um mapa.");
-                return null;
-            }
-
-            Map<String, Object> map = (Map<String, Object>) obj;
-            return ItemStack.deserialize(map);
-        } catch (Exception e) {
-            Bukkit.getLogger().warning("[Syntri] Falha ao desserializar item: " + e.getMessage());
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+            ItemStack item = (ItemStack) dataInput.readObject();
+            dataInput.close();
+            return item;
+        } catch (IOException | ClassNotFoundException e) {
+            Bukkit.getLogger().warning("[Syntri] Erro ao desserializar item: " + e.getMessage());
             return null;
         }
     }
 
-    public static boolean giveKitItems(Player player, Kit kit) {
-        boolean hasSpace = player.getInventory().firstEmpty() != -1;
-
-        for (ItemStack item : kit.getItems()) {
-            if (item == null || item.getType() == Material.AIR) continue;
-            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(item);
-            if (!remaining.isEmpty()) {
-                player.sendMessage("§cSeu inventário está cheio. Não foi possível receber todos os itens do kit.");
-                return false;
-            }
-        }
-
-        ItemStack[] currentArmor = player.getInventory().getArmorContents();
-        for (int i = 0; i < kit.getArmor().size(); i++) {
-            if (i < currentArmor.length && currentArmor[i] != null && currentArmor[i].getType() != Material.AIR) {
-                player.sendMessage("§cVocê já está usando uma armadura. Remova-a antes de aplicar o kit.");
-                return false;
-            }
-        }
-
-        for (int i = 0; i < kit.getArmor().size(); i++) {
-            if (i < currentArmor.length) {
-                currentArmor[i] = kit.getArmor().get(i);
-            }
-        }
-
-        player.getInventory().setArmorContents(currentArmor);
-        return true;
-    }
 }

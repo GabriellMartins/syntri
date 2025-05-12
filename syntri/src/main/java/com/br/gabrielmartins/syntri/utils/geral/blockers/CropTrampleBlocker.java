@@ -35,10 +35,6 @@ public class CropTrampleBlocker implements Listener {
 
         if (event.getBlock().getType() == soilMaterial) {
             event.setCancelled(true);
-            Bukkit.getLogger().info("[Syntri] 🌾 Pisoteio de plantação bloqueado em " +
-                    event.getBlock().getX() + "," +
-                    event.getBlock().getY() + "," +
-                    event.getBlock().getZ());
         }
     }
 }

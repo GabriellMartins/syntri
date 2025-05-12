@@ -4,10 +4,10 @@ import com.br.gabrielmartins.syntri.module.ModuleLoader
 import com.br.gabrielmartins.syntri.module.loader.Registrable
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
-import org.reflections.Reflections
-import org.reflections.scanners.SubTypesScanner
 import org.bukkit.event.Listener
 import org.bukkit.plugin.Plugin
+import org.reflections.Reflections
+import org.reflections.scanners.SubTypesScanner
 import java.io.File
 
 class GeneralModule(loadModules: ModuleLoader, private val plugin: Plugin) : Registrable {
@@ -56,6 +56,21 @@ class GeneralModule(loadModules: ModuleLoader, private val plugin: Plugin) : Reg
                     plugin.logger.warning("[Syntri] ❌ Falha ao carregar: $className")
                     ex.printStackTrace()
                 }
+            }
+        }
+
+        ensureReadmeExists("general")
+    }
+
+    private fun ensureReadmeExists(moduleName: String) {
+        val moduleDir = File(plugin.dataFolder, "modules/$moduleName")
+        val readmeFile = File(moduleDir, "README.md")
+
+        if (!readmeFile.exists()) {
+            val resourcePath = "modules/$moduleName/README.md"
+            val resource = plugin.getResource(resourcePath)
+            if (resource != null) {
+                plugin.saveResource(resourcePath, false)
             }
         }
     }

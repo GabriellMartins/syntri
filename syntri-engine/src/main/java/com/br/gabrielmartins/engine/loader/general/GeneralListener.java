@@ -25,60 +25,59 @@ public class GeneralListener {
     }
 
     public GeneralListener listener(String basePackage) {
-        logger.info("[Syntri] 🔍 Procurando Listeners no pacote: " + basePackage);
 
         Reflections reflections = new Reflections(
                 new ConfigurationBuilder()
                         .forPackages(basePackage)
-                        .addScanners(new SubTypesScanner(false)) // inclui classes sem anotação
+                        .addScanners(new SubTypesScanner(false))
         );
 
         Set<Class<? extends Listener>> listenerClasses = reflections.getSubTypesOf(Listener.class);
 
-        logger.info("[Syntri] 📦 Total de Listeners encontrados: " + listenerClasses.size());
-
         for (Class<? extends Listener> clazz : listenerClasses) {
-            if (Modifier.isAbstract(clazz.getModifiers())) {
-                logger.info("[Syntri] ⏭️ Ignorando classe abstrata: " + clazz.getName());
-                continue;
-            }
+            if (Modifier.isAbstract(clazz.getModifiers())) continue;
 
             try {
                 Listener listenerInstance = null;
+                Constructor<?>[] constructors = clazz.getDeclaredConstructors();
 
-                // 1. Tenta com inventoryLoader
-                for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
-                    if (constructor.getParameterCount() == 1 &&
-                            constructor.getParameterTypes()[0].isInstance(inventoryLoader)) {
+                for (Constructor<?> constructor : constructors) {
+                    Class<?>[] params = constructor.getParameterTypes();
+
+                    if (params.length == 2 &&
+                            params[0].getSimpleName().equalsIgnoreCase("ScoreboardManager") &&
+                            params[1] == Plugin.class) {
+                        listenerInstance = null;
+                        break;
+                    }
+
+                    if (params.length == 1 &&
+                            params[0].isInstance(inventoryLoader)) {
                         listenerInstance = (Listener) constructor.newInstance(inventoryLoader);
-                        logger.info("[Syntri] ✅ Registrado (com loader): " + clazz.getSimpleName());
+                        break;
+                    }
+
+                    if (params.length == 1 &&
+                            params[0].isInstance(plugin)) {
+                        listenerInstance = (Listener) constructor.newInstance(plugin);
                         break;
                     }
                 }
 
-                // 2. Tenta com Plugin
                 if (listenerInstance == null) {
-                    for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
-                        if (constructor.getParameterCount() == 1 &&
-                                constructor.getParameterTypes()[0].isInstance(plugin)) {
-                            listenerInstance = (Listener) constructor.newInstance(plugin);
-                            logger.info("[Syntri] ✅ Registrado (com plugin): " + clazz.getSimpleName());
-                            break;
-                        }
+                    try {
+                        Constructor<? extends Listener> noArgsConstructor = clazz.getDeclaredConstructor();
+                        listenerInstance = noArgsConstructor.newInstance();
+                    } catch (NoSuchMethodException ignored) {
+                        continue;
                     }
                 }
 
-                // 3. Tenta com construtor vazio
-                if (listenerInstance == null) {
-                    Constructor<? extends Listener> noArgsConstructor = clazz.getDeclaredConstructor();
-                    listenerInstance = noArgsConstructor.newInstance();
-                    logger.info("[Syntri] ✅ Registrado (construtor vazio): " + clazz.getSimpleName());
+                if (listenerInstance != null) {
+                    Bukkit.getPluginManager().registerEvents(listenerInstance, plugin);
                 }
 
-                Bukkit.getPluginManager().registerEvents(listenerInstance, plugin);
-
             } catch (Exception e) {
-                logger.warning("[Syntri] ❌ Falha ao registrar listener: " + clazz.getName() + " -> " + e.getClass().getSimpleName() + ": " + e.getMessage());
                 e.printStackTrace();
             }
         }

@@ -31,17 +31,10 @@ class ScoreboardManager(
         objective.displaySlot = DisplaySlot.SIDEBAR
 
         var rawTitle = config.getString("scoreboard.title", "&bSyntri Network") ?: "&bSyntri Network"
-
-        if (supportsRGB) {
-            rawTitle = applyGradientTags(rawTitle)
-        } else {
-            rawTitle = rawTitle.replace(gradientRegex) { "&b${it.groupValues[3]}" }
-        }
+        rawTitle = if (supportsRGB) applyGradientTags(rawTitle) else rawTitle.replace(gradientRegex, "&b$3")
 
         var title = ChatColor.translateAlternateColorCodes('&', rawTitle)
-        title = ChatColor.stripColor(title)?.let {
-            if (it.length > 32) title.substring(0, title.length - (it.length - 32)) else title
-        } ?: title
+        title = title.trimColorized(32)
 
         objective.displayName = title
 
@@ -84,11 +77,12 @@ class ScoreboardManager(
         animationTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
             val baseTitle = config.getString("scoreboard.title", "Syntri") ?: "Syntri"
             val animated = animationType.generateNext(baseTitle, animationIndex++)
+            val title = ChatColor.translateAlternateColorCodes('&', applyGradientTags(animated)).trimColorized(32)
 
             players.forEach { player ->
                 boards[player.uniqueId]
                     ?.getObjective(DisplaySlot.SIDEBAR)
-                    ?.displayName = animated.take(32)
+                    ?.displayName = title
             }
         }, 0L, interval)
     }
@@ -104,17 +98,17 @@ class ScoreboardManager(
             parsed = applyGradientTags(parsed)
         }
 
-        parsed = ChatColor.translateAlternateColorCodes('&', parsed).replace('$', '§')
-
-        return parsed
+        return ChatColor.translateAlternateColorCodes('&', parsed).replace('$', '§')
     }
 
     private fun applyGradientTags(text: String): String {
         var result = text
         gradientRegex.findAll(text).forEach {
-            val (start, end, content) = it.destructured
-            val gradient = GradientUtil.generateGradient(content, start, end)
-            result = result.replace(it.value, gradient)
+            if (it.groupValues.size >= 4) {
+                val (start, end, content) = it.destructured
+                val gradient = GradientUtil.generateGradient(content, start, end)
+                result = result.replace(it.value, gradient)
+            }
         }
         return result
     }
@@ -127,5 +121,31 @@ class ScoreboardManager(
         } catch (ex: Exception) {
             false
         }
+    }
+
+    private fun String.trimColorized(max: Int): String {
+        var visible = 0
+        var skip = false
+        val builder = StringBuilder()
+
+        for (char in this) {
+            if (char == '§') {
+                skip = true
+                builder.append(char)
+                continue
+            }
+
+            if (skip) {
+                skip = false
+                builder.append(char)
+                continue
+            }
+
+            if (visible >= max) break
+            builder.append(char)
+            visible++
+        }
+
+        return builder.toString()
     }
 }
