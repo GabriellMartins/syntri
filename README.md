@@ -1,130 +1,104 @@
-# Syntri ⚙️
+# 🌐 Syntri
 
-> O essencial do seu servidor.
-
-O **Syntri** é um plugin modular e poderoso para servidores Minecraft. Ele oferece uma base robusta, fácil de configurar, com suporte a múltiplos bancos de dados, mensagens customizadas, integração com PlaceholderAPI, MOTD animado e muito mais.
+**Syntri** é um plugin modular e extensível para servidores Minecraft (1.8 até 1.21.x), desenvolvido em **Kotlin + Java**, com foco em desempenho, proteção e organização de funcionalidades.
 
 ---
 
-## 📸 Banner
+## 🚀 Recursos Principais
 
-<p align="center">
-  <img src="assets/banner.png" alt="Banner Syntri" width="600"/>
-</p>
-
----
-
-## ⚙️ Funcionalidades
-
-- ✅ Suporte a múltiplos bancos: MySQL, SQLite, PostgreSQL, Oracle, MongoDB, Firebird, SQL Server
-- ✅ Mensagens de boas-vindas e saída com PlaceholderAPI
-- ✅ Detecção de idioma por IP (fallback para `"br"`)
-- ✅ Sistema de MOTD animado
-- ✅ Proteções configuráveis: dano, interação, clima, fome, comandos, inventário, etc.
-- ✅ Sistema de tradução via arquivos YAML
-- ✅ Sistema de kits com cooldown, permissões e itens
-- ✅ Modular e expansível
+- 🎯 **Sistema Anti-Dupe** inteligente para evitar duplicações via baús, shift-click e exploits comuns
+- ✅ **Modularização por pacotes** (kits, scoreboard, restrições, utilidades, etc.)
+- 💬 **Scoreboard RGB animado**, com suporte a PlaceholderAPI
+- 🎒 **Kits com cooldown, permissões, armaduras, efeitos e meta NBT**
+- 🔒 Bloqueios de: comandos, crafting, containers, ender pearls no border, camas, nether roof e mais
+- 🌍 Comandos essenciais: `/kit`, `/tp`, `/warp`, `/home`, `/spawn`, `/ping`, etc.
+- 📜 Código limpo, comentado e orientado a boas práticas
 
 ---
 
-## 🔧 Configuração Principal (`config.yml`)
+## 🛡️ Sistema Anti-Dupe (Proteção Contra Duplicações)
 
-```yaml
-backend:
-  type: "mysql"
-  host: "198.89.99.179"
-  port: 3306
-  database: "s20_fuzy_shaw"
-  username: "u20_LoZOofh8zE"
-  password: "Ck.DmYnEvjtKo^+L!9oj.RGT"
-  file: "database.db"
-  uri: "mongodb://localhost"
-  service: "XE"
+Syntri inclui um sistema anti-duplicação interno, que:
 
-general:
-  language: "us"
-  welcome-message:
-    enabled: true
-    text: "&aNome: %syntri_name% | Vida: %syntri_health% | Mundo: %syntri_world% | Ping: %syntri_ping% | Online: %syntri_online% | Banco: %syntri_backend%"
-  quit-message:
-    enabled: true
-    text: "&e[Syntri] O jogador %player_name% saiu do servidor."
+- Bloqueia uso indevido de **shift+click** em containers configurados
+- Impede craftings de itens que causam bug em versões antigas (como `/minecraft:enchanted_golden_apple`)
+- Cancela interações com inventários instáveis (como bigornas infinitas ou duplicação com mobs)
+- Protege contra glitches com blocos como **baús**, **funis**, **droppers**, **baldes**, e containers em geral
 
-motd:
-  enabled: true
-  messages:
-    - "&eBem-vindodasdasda"
-    - "&aConfira nossos eventos!"
-    - "&bDivirta-se jogando!"
-  interval: 1
-  animation: true
+O sistema funciona por eventos como:
 
-scoreboard:
-  enabled: true
-  title: "&e&lSYNTRI"
-  lines:
-    - "&7&m----------------------"
-    - "&aNick: &f%player_name%"
-    - "&aVida: &f%syntri_health%"
-    - "&aPing: &f%syntri_ping%ms"
-    - "&aOnline: &f%syntri_online%"
-    - "&aBanco: &f%syntri_backend%"
-    - "&7&m----------------------"```
+- `InventoryClickEvent`
+- `InventoryOpenEvent`
+- `PrepareItemCraftEvent`
+- `PlayerDropItemEvent`
+
+Você pode personalizar tudo via `modules/general/config.yml`.
 
 ---
 
-## 🧰 Kits (`kits.yml`)
+## 🔧 Instalação
 
-```yaml
-starter:
-  permission: "syntri.kit.starter"
-  time: "10s"
-  items:
-    - ==: org.bukkit.inventory.ItemStack
-      type: STONE_SWORD
-    - ==: org.bukkit.inventory.ItemStack
-      type: BREAD
-      amount: 16
-    - ==: org.bukkit.inventory.ItemStack
-      type: LEATHER_HELMET
-
-vip:
-  permission: "syntri.kit.vip"
-  time: "1d"
-  items:
-    - ==: org.bukkit.inventory.ItemStack
-      type: DIAMOND_SWORD
-    - ==: org.bukkit.inventory.ItemStack
-      type: GOLDEN_APPLE
-      amount: 5
-    - ==: org.bukkit.inventory.ItemStack
-      type: DIAMOND_CHESTPLATE
-
-warrior:
-  permission: "syntri.kit.warrior"
-  time: "2sa"
-  items:
-    - ==: org.bukkit.inventory.ItemStack
-      type: IRON_SWORD
-    - ==: org.bukkit.inventory.ItemStack
-      type: COOKED_BEEF
-      amount: 20
-```
+1. Baixe o `Syntri.jar`
+2. Coloque na pasta `/plugins`
+3. Inicie o servidor
+4. Configure os módulos em `/plugins/Syntri/modules/`
 
 ---
 
-## 📦 Instalação
+## ✅ Permissões
 
-1. Baixe o arquivo `.jar` compilado
-2. Coloque em `plugins/`
-3. Configure os arquivos `config.yml` e `kits.yml`
-4. Reinicie o servidor
-5. Aproveite!
+| Permissão            | Descrição                                                        |
+|----------------------|------------------------------------------------------------------|
+| `syntri.kit`         | Usar `/kit`                                                      |
+| `syntri.createkit`   | Criar kits                                                       |
+| `syntri.tp`          | Usar `/tp`                                                       |
+| `syntri.spawn`       | Usar `/spawn`                                                    |
+| `syntri.setspawn`    | Definir o spawn                                                  |
+| `syntri.home`        | Usar `/home`                                                     |
+| `syntri.sethome`     | Definir `/sethome`                                               |
+| `syntri.warp`        | Usar `/warp`                                                     |
+| `syntri.setwarp`     | Definir `/setwarp`                                               |
+| `syntri.gm`          | Mudar o modo de jogo                                             |
+| `syntri.reload`      | Recarregar configurações                                         |
+| `syntri.chat`        | Usar o chat global (se houver restrições)                        |
+| `syntri.dev`         | Acesso a ferramentas de debug                                    |
+
+---
+
+## 📂 Estrutura de Pastas
+
+````yaml
+/plugins/Syntri/
+├── modules/
+│ ├── general/
+│ │ ├── config.yml
+│ │ └── README.md
+│ ├── kits/
+│ │ ├── config.yml
+│ │ └── README.md
+│ ├── scoreboard/
+│ │ └── config.yml
+└── ...
+````
+
+
+---
+
+## 🔗 Requisitos
+
+- Java 17+
+- Spigot ou Paper 1.8 até 1.21.x
+- PlaceholderAPI (opcional, mas recomendado)
+
+---
+
+## 👨‍💻 Projeto
+
+Desenvolvido com ❤️ por **Gabriel Martins**  
+🔗 GitHub: [github.com/GabriellMartins](https://github.com/GabriellMartins)
 
 ---
 
 ## 📄 Licença
 
-Esse projeto é licenciado sob a [MIT License](LICENSE).
-
----
+Distribuído sob a licença MIT.
