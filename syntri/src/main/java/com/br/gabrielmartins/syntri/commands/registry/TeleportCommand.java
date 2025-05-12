@@ -133,7 +133,7 @@ public class TeleportCommand implements CommandExecutor {
                         }
 
                         if (toBlock.equals(player)) {
-                            player.sendMessage("§cVocê não pode bloquear a si mesmo.");
+                            player.sendMessage(mm.getMessage("teleport.cannot_block_self"));
                             return true;
                         }
 
@@ -143,15 +143,15 @@ public class TeleportCommand implements CommandExecutor {
 
                         if (blocked.contains(target)) {
                             blocked.remove(target);
-                            player.sendMessage("§aVocê desbloqueou §e" + toBlock.getName() + "§a.");
+                            player.sendMessage(mm.getMessage("teleport.unblocked_player").replace("%player%", toBlock.getName()));
                         } else {
                             blocked.add(target);
-                            player.sendMessage("§aVocê bloqueou §e" + toBlock.getName() + "§a de enviar TPA para você.");
+                            player.sendMessage(mm.getMessage("teleport.blocked_player").replace("%player%", toBlock.getName()));
                         }
-                        return true;
+
                     }
 
-                    default: {
+                        default: {
                         Player targetPlayer = Bukkit.getPlayerExact(arg);
                         if (targetPlayer == null || !targetPlayer.isOnline()) {
                             player.sendMessage(mm.getMessage("teleport.player_not_found"));

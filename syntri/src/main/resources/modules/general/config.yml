@@ -1,0 +1,222 @@
+block-containers:
+  - CHEST
+  - HOPPER
+  - FURNACE
+
+void-fall:
+  enabled: false
+  message: "&cYou fell into the void and have been teleported to spawn."
+
+bed-enter:
+  enabled: false
+  message: "&cYou are not allowed to sleep in beds."
+
+blocked-commands:
+  enabled: false
+  message: "&cYou are not allowed to use this command."
+  list:
+    - /pl
+    - /plugins
+    - /me
+    - /bukkit:help
+
+block-water-freeze:
+  enabled: false
+
+blocked-crafts:
+  enabled: false
+  list:
+    - DIAMOND_SWORD
+    - ENCHANTED_GOLDEN_APPLE
+  message: "&cYou are not allowed to craft this item."
+
+block-portal-create:
+  enabled: false
+
+block-fade:
+  enabled: false
+  materials:
+    - ICE
+    - SNOW
+    - SNOW_BLOCK
+
+block-item-explosion:
+  enabled: false
+
+block-duplicate-login:
+  enabled: false
+  message: "&cThe nickname %nome% is already logged in."
+
+block-duplicate-login-super:
+  enabled: false
+  message: "&cThe nickname %nome% is already logged in."
+
+block-sun-fire:
+  enabled: false
+
+block-mob-item-pickup:
+  enabled: false
+
+block-name-tag:
+  enabled: false
+  message: "&cYou are not allowed to use name tags."
+
+block-bad-nicks:
+  enabled: false
+  message: "&cNick contains a forbidden word: %nick%"
+  list:
+    - hack
+    - admin
+    - owner
+
+block-border-pearl:
+  enabled: false
+  message: "&c%player%, you cannot throw ender pearls beyond the world border."
+
+block-signs:
+  enabled: false
+  block-all: false
+  block-specific: true
+  blocked-words:
+    - hack
+    - servidor
+    - admin
+  message-all: "&cYou are not allowed to place signs."
+  message-word: "&cThe word \"%palavra%\" is not allowed on signs."
+
+block-crop-trample:
+  enabled: false
+
+block-shift-in-containers:
+  enabled: false
+  message: "&cYou are not allowed to use shift-click in %tipo%."
+  containers:
+    - CHEST
+    - HOPPER
+    - DISPENSER
+    -
+block-vehicle-enter:
+  enabled: false
+  message: "&cYou are not allowed to enter vehicles."
+
+block-nether-roof:
+  enabled: false
+  message: "&cYou cannot go above the Nether roof."
+
+block-portal-teleport:
+  enabled: false
+  nether: true
+  end: true
+  message: "&cYou are not allowed to teleport through this portal."
+
+disable-weather:
+  enabled: false
+
+disable-daylight-cycle:
+  enabled: false
+  time-lock: true
+  fixed-time: 6000
+
+disable-blaze-fireball:
+  enabled: false
+
+disable-cactus-damage:
+  enabled: false
+
+disable-enderdragon-explosion:
+  enabled: false
+
+disable-ghast-fireball:
+  enabled: false
+
+disable-wither-damage:
+  enabled: false
+
+disable-water-lava-flow:
+  enabled: false
+
+disable-hunger:
+  enabled: false
+
+disable-death-message:
+  enabled: false
+
+disable-natural-mob-spawn:
+  enabled: false
+
+disable-natural-mob-spawn-old:
+  enabled: false
+
+disable-fire-spread:
+  enabled: false
+
+disable-sand-gravel-fall:
+  enabled: false
+
+disable-anvil-fall:
+  enabled: false
+
+disable-leaves-decay:
+  enabled: false
+
+infinite-anvil:
+  enabled: false
+
+block-invalid-money:
+  enabled: false
+  blocked-commands:
+    - /mercado
+    - /market
+    - /money
+  invalid-values:
+    - "null"
+    - "nan"
+    - "-nan"
+    - "-null"
+  message-invalid-number: "&cInvalid number: %numero%"
+  message-invalid-money: "&cInvalid or corrupt money value."
+
+first-join-commands:
+  enabled: false
+  list:
+    - "give %player% minecraft:stone 64"
+    - "say Welcome %player% to the server!"
+    - "lp user %player% parent add novato"
+
+anvil-color-rename:
+  enabled: false
+
+sign-color:
+  enabled: false
+
+enderpearl-cooldown:
+  enabled: false
+  seconds: 10
+  message: "&cPlease wait before throwing another ender pearl."
+
+spawn-on-login:
+  enabled: false
+  teleport-respawn: true
+  vip-permission: "syntri.spawn.vip"
+
+teleport-invincibility:
+  enabled: false
+  duration: 5 # segundos
+
+player-limit:
+  enabled: false
+  max: 100
+  kick-non-vip: true
+  kick-delay-seconds: 5
+  vip-permission: "syntri.lotado.entrar"
+  messages:
+    server-full: "&cServer is full. Try again later."
+    warn-kick: "&eYou're being removed to make space for a VIP."
+    kick-message: "&cYou were removed to make space for a VIP player."
+
+keep-xp-on-death:
+  enabled: false
+  permission: "syntri.manterxp"
+
+remove-dead-entities-on-portal:
+  enabled: false

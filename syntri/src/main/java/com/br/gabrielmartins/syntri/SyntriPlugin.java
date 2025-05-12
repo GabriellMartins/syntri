@@ -10,16 +10,21 @@ import com.br.gabrielmartins.engine.data.factory.BackendFactory;
 import com.br.gabrielmartins.engine.data.service.mongo.MongoDataService;
 import com.br.gabrielmartins.engine.data.service.sql.SQLDataService;
 import com.br.gabrielmartins.engine.loader.command.CommandLoader;
+import com.br.gabrielmartins.engine.loader.general.GeneralListener;
 import com.br.gabrielmartins.engine.loader.listener.LoaderListener;
+import com.br.gabrielmartins.syntri.api.reflection.ReflectionUtils;
 import com.br.gabrielmartins.syntri.cache.TopMoneyCache;
+import com.br.gabrielmartins.syntri.enums.Version;
 import com.br.gabrielmartins.syntri.kit.manager.KitManager;
-import com.br.gabrielmartins.syntri.modulo.list.kits.KitModule;
+import com.br.gabrielmartins.syntri.module.list.general.GeneralModule;
+import com.br.gabrielmartins.syntri.module.list.kits.KitModule;
 import com.br.gabrielmartins.syntri.modules.MotdModule;
-import com.br.gabrielmartins.syntri.modulo.ModuleLoader;
-import com.br.gabrielmartins.syntri.modulo.list.optimizer.OptimizerModule;
-import com.br.gabrielmartins.syntri.modulo.list.scoreboard.ScoreboardModule;
-import com.br.gabrielmartins.syntri.modulo.list.tablist.TablistModule;
-import com.br.gabrielmartins.syntri.modulo.loader.ModuleAutoLoader;
+import com.br.gabrielmartins.syntri.module.ModuleLoader;
+import com.br.gabrielmartins.syntri.module.list.optimizer.OptimizerModule;
+import com.br.gabrielmartins.syntri.module.list.scoreboard.ScoreboardModule;
+import com.br.gabrielmartins.syntri.module.list.tablist.TablistModule;
+import com.br.gabrielmartins.syntri.module.loader.ModuleAutoLoader;
+import com.br.gabrielmartins.syntri.module.utility.LoadUtilityModulesKt;
 import com.br.gabrielmartins.syntri.optimization.ChunkOptimizer;
 import com.br.gabrielmartins.syntri.tablist.TablistManager;
 import lombok.Getter;
@@ -41,25 +46,20 @@ import java.util.List;
 @Getter
 public final class SyntriPlugin extends JavaPlugin {
 
-    public static final String BASE_URL_GENERATE = "http://localhost:8080/api/v1/keys/generate";
-    public static final String PANEL_URL = "https://panel.localhost:3000/server/";
+    @Getter @Setter public static SyntriPlugin instance;
+    @Getter @Setter public MessagesManager messagesManager;
+    @Getter @Setter public Backend backend;
+    @Getter @Setter public MongoBackend mongoBackend;
+    @Getter @Setter public static InventoryLoader inventoryLoader;
+    @Getter @Setter public FileConfiguration configData;
+    @Getter @Setter public Economy economy;
+    @Getter @Setter public TopMoneyCache topMoneyCache;
+    @Getter @Setter public TablistManager tablistManager;
+    @Getter @Setter public ModuleLoader loadModules;
+    @Getter @Setter public LoaderListener listenerLoad;
+    @Getter @Setter public GeneralListener generalLoad;
+    @Getter @Setter public static Version version;
 
-    @Getter
-    private static SyntriPlugin instance;
-
-    @Getter
-    @Setter
-    private MessagesManager messagesManager;
-
-    private Backend backend;
-    private MongoBackend mongoBackend;
-    private static InventoryLoader inventoryLoader;
-    private FileConfiguration configData;
-    private Economy economy;
-    private TopMoneyCache topMoneyCache;
-    private TablistManager tablistManager;
-    private ModuleLoader loadModules;
-    @Setter private LoaderListener listenerLoad;
 
     @Override
     public void onLoad() {
@@ -72,7 +72,8 @@ public final class SyntriPlugin extends JavaPlugin {
         instance = this;
 
         new ChunkOptimizer(this);
-
+        ReflectionUtils.loadUtils();
+        version = Version.getServerVersion();
         reloadConfig();
         saveDefaultConfig();
         saveConfig();
@@ -83,6 +84,11 @@ public final class SyntriPlugin extends JavaPlugin {
         registerModules();
 
         ModuleAutoLoader.loadAll(loadModules, this);
+
+        ModuleLoader loader = new ModuleLoader(getDataFolder(), this);
+
+        loader.loadModules();
+        new GeneralListener(this, inventoryLoader).listener("com.br.gabrielmartins.syntri.utils");
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SyntriPlaceholder().register();
@@ -107,11 +113,13 @@ public final class SyntriPlugin extends JavaPlugin {
             Bukkit.getPluginManager().getPlugin("Syntri").saveResource("modules/kits/config.yml", false);
         }
 
-
         KitManager.loadKits(kitFile);
 
         listenerLoad = new LoaderListener(this, inventoryLoader);
         listenerLoad.listener("com.br.gabrielmartins.syntri.listener");
+
+        generalLoad = new GeneralListener(this, generalLoad);
+        generalLoad.listener("com.br.gabrielmartins.syntri.utils");
 
         initBackend();
 
@@ -121,7 +129,6 @@ public final class SyntriPlugin extends JavaPlugin {
 
         startAutoMessages();
     }
-
 
     @Override
     public void onDisable() {
@@ -167,6 +174,7 @@ public final class SyntriPlugin extends JavaPlugin {
         new MotdModule(loadModules, this).register();
         new KitModule(loadModules, this).register();
         new OptimizerModule(loadModules, this).register();
+        new GeneralModule(loadModules, this).register();
 
     }
 
@@ -198,6 +206,7 @@ public final class SyntriPlugin extends JavaPlugin {
             }
         }
     }
+
     private void startAutoMessages() {
         ConfigurationSection section = getConfig().getConfigurationSection("auto-messages");
         if (section == null || !section.getBoolean("enabled", false)) return;
@@ -289,4 +298,149 @@ public final class SyntriPlugin extends JavaPlugin {
         return this.configData;
     }
 
+    public static boolean isRecomendedVersion() {
+        if (version == Version.v1_8)
+            return true;
+        if (version == Version.v1_9)
+            return true;
+        if (version == Version.v1_10)
+            return true;
+        if (version == Version.v1_11)
+            return true;
+        if (version == Version.v1_12)
+            return true;
+        return false;
+    }
+
+    public static boolean isOldVersion() {
+        if (version == Version.v1_7)
+            return true;
+        if (version == Version.v1_6)
+            return true;
+        if (version == Version.v1_5)
+            return true;
+        return false;
+    }
+
+    public static boolean isVeryOldVersion() {
+        if (version == Version.v1_6)
+            return true;
+        if (version == Version.v1_5)
+            return true;
+        return false;
+    }
+
+    public static boolean isNewVersion() {
+        if (version == Version.v1_21)
+            return true;
+        if (version == Version.v1_20)
+            return true;
+        if (version == Version.v1_19)
+            return true;
+        if (version == Version.v1_18)
+            return true;
+        if (version == Version.v1_17)
+            return true;
+        if (version == Version.v1_16_5)
+            return true;
+        if (version == Version.v1_16_4)
+            return true;
+        if (version == Version.v1_16_3)
+            return true;
+        if (version == Version.v1_16_2)
+            return true;
+        if (version == Version.v1_16)
+            return true;
+        if (version == Version.v1_15)
+            return true;
+        if (version == Version.v1_14)
+            return true;
+        if (version == Version.v1_13)
+            return true;
+        if (version == Version.v1_12)
+            return true;
+        if (version == Version.v1_11)
+            return true;
+        return false;
+    }
+
+    public static boolean isVeryNewVersion() {
+        if (version == Version.v1_21)
+            return true;
+        if (version == Version.v1_20)
+            return true;
+        if (version == Version.v1_19)
+            return true;
+        if (version == Version.v1_18)
+            return true;
+        if (version == Version.v1_17)
+            return true;
+        if (version == Version.v1_16_5)
+            return true;
+        if (version == Version.v1_16_4)
+            return true;
+        if (version == Version.v1_16_3)
+            return true;
+        if (version == Version.v1_16_2)
+            return true;
+        if (version == Version.v1_16)
+            return true;
+        if (version == Version.v1_15)
+            return true;
+        if (version == Version.v1_14)
+            return true;
+        if (version == Version.v1_13)
+            return true;
+        return false;
+    }
+
+    public static boolean isVeryFuckingNewVersion() {
+        if (version == Version.v1_21)
+            return true;
+        if (version == Version.v1_20)
+            return true;
+        if (version == Version.v1_19)
+            return true;
+        if (version == Version.v1_18)
+            return true;
+        if (version == Version.v1_17)
+            return true;
+        if (version == Version.v1_16_5)
+            return true;
+        if (version == Version.v1_16_4)
+            return true;
+        if (version == Version.v1_16_3)
+            return true;
+        if (version == Version.v1_16_2)
+            return true;
+        if (version == Version.v1_16)
+            return true;
+        if (version == Version.v1_15)
+            return true;
+        if (version == Version.v1_14)
+            return true;
+        return false;
+    }
+
+    public static boolean isMotherFuckerVersion() {
+        if (version == Version.v1_21)
+            return true;
+        if (version == Version.v1_20)
+            return true;
+        if (version == Version.v1_19)
+            return true;
+        if (version == Version.v1_18)
+            return true;
+        if (version == Version.v1_17)
+            return true;
+        if (version == Version.v1_16_5)
+            return true;
+        if (version == Version.v1_16_4)
+            return true;
+        if (version == Version.v1_16_3)
+            return true;
+        if (version == Version.v1_16_2)
+            return true;
+        return false;
+    }
 }

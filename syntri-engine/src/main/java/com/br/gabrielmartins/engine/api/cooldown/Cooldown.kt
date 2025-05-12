@@ -12,8 +12,12 @@ import java.util.*
 object Cooldown {
 
     private val cooldowns = mutableMapOf<UUID, Long>()
-    private val version = Bukkit.getServer().javaClass.packageName.split(".")[3]
-    private val majorVersion = parseVersion(version)
+
+    private val version: String = runCatching {
+        Bukkit.getServer().javaClass.packageName.split(".").getOrNull(3) ?: "UNKNOWN"
+    }.getOrElse { "UNKNOWN" }
+
+    private val majorVersion: Int = parseVersion(version)
 
     fun start(plugin: JavaPlugin, player: Player, seconds: Int, messagePrefix: String) {
         val uuid = player.uniqueId
@@ -83,19 +87,15 @@ object Cooldown {
         }.runTaskTimer(plugin, delayTicks, intervalTicks)
     }
 
-    private fun parseVersion(version: String): Int {
-        return try {
-            if ("_" in version) version.split("_")[1].toInt() else 999
-        } catch (e: Exception) {
-            999
-        }
-    }
-
     fun sendActionBar(player: Player, message: String) {
         try {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(message))
         } catch (e: Exception) {
             player.sendMessage("${ChatColor.RED}[Erro ActionBar] $message")
         }
+    }
+
+    private fun parseVersion(version: String): Int {
+        return version.substringAfter("_", "999").toIntOrNull() ?: 999
     }
 }

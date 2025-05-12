@@ -70,7 +70,7 @@ public enum DataTable {
         return selectSQL;
     }
 
-    private static Backend getBackend() {
+    public static Backend getBackend() {
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Syntri");
         if (plugin == null) {
             throw new IllegalStateException("Plugin 'Syntri' não encontrado.");

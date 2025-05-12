@@ -170,6 +170,9 @@ teleport:
   tpa_message: "&e%player% wants to teleport to you. "
   tpa_accept: "§a§l[ACCEPT]"
   tpa_deny: " §c§l[DENY]"
+  cannot_block_self: "§cYou cannot block yourself"
+  teleport.blocked_player: "§aYou have blocked §e%player%§a from sending you TPA requests."
+  teleport.unblocked_player: "§aYou have unblocked §e%player%§a."
 
 warp:
   only_players: "&cOnly players can use this command."

@@ -4,9 +4,14 @@ import com.br.gabrielmartins.syntri.MessagesManager;
 import com.br.gabrielmartins.engine.backend.Backend;
 import com.br.gabrielmartins.engine.backend.sqllite.SQLiteBackend;
 import com.br.gabrielmartins.syntri.SyntriPlugin;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
+
+import static com.br.gabrielmartins.engine.data.table.DataTable.getBackend;
 
 public enum DataTable {
 
@@ -100,6 +105,54 @@ public enum DataTable {
     }
 
     public static void teleportToSpawn(Player player) {
+        MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
+        try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT world, x, y, z FROM spawn WHERE id = 1")) {
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String worldName = rs.getString("world");
+                double x = rs.getDouble("x");
+                double y = rs.getDouble("y");
+                double z = rs.getDouble("z");
+
+                if (player.getServer().getWorld(worldName) != null) {
+                    player.teleport(player.getServer().getWorld(worldName).getBlockAt((int) x, (int) y, (int) z).getLocation());
+                    player.sendMessage(mm.getMessage("spawn2.teleport_success"));
+                } else {
+                    player.sendMessage(mm.getMessage("spawn2.world_not_found"));
+                }
+            } else {
+                player.sendMessage(mm.getMessage("spawn2.not_set"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static Location getSpawnLocation() {
+        try (Connection conn = getBackend().getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT world, x, y, z FROM spawn WHERE id = 1")) {
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String worldName = rs.getString("world");
+                double x = rs.getDouble("x");
+                double y = rs.getDouble("y");
+                double z = rs.getDouble("z");
+
+                World world = Bukkit.getWorld(worldName);
+                if (world != null) {
+                    return new Location(world, x, y, z);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static void teleportToVipSpawn(Player player) {
         MessagesManager mm = SyntriPlugin.getInstance().getMessagesManager();
         try (Connection conn = SyntriPlugin.getInstance().getBackend().getConnection();
              PreparedStatement stmt = conn.prepareStatement("SELECT world, x, y, z FROM spawn WHERE id = 1")) {
